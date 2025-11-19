@@ -95,13 +95,20 @@
             <groupId>com.vaadin</groupId>
             <!-- Replace artifactId with vaadin-core to use only free components -->
             <artifactId>vaadin</artifactId>
-            <!-- Remove the following exclussion if you want to enable Hilla -->
+            <!-- Remove the following exclusion if you want to enable Hilla -->
             <exclusions>
                 <exclusion>
                     <groupId>com.vaadin</groupId>
                     <artifactId>hilla-dev</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.vaadin/vaadin-icons -->
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-icons</artifactId>
+            <version>3.0.2</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Added to provide logging output as Vaadin uses -->

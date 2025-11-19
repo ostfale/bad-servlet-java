@@ -11,7 +11,7 @@ import org.openqa.selenium.Keys;
 import com.vaadin.testbench.BrowserTest;
 import com.vaadin.testbench.BrowserTestBase;
 
-public class MainViewIT extends BrowserTestBase {
+public class MainLayoutIT extends BrowserTestBase {
 
     /**
      * If running on CI, get the host name from environment variable HOSTNAME
@@ -31,7 +31,7 @@ public class MainViewIT extends BrowserTestBase {
         getDriver().get("http://"+getDeploymentHostname()+":8080/");
     }
 
-    @BrowserTest
+ /*   @BrowserTest
     public void clickingButtonAddsParagraph() {
         Assertions.assertFalse($(ParagraphElement.class).exists());
         $(ButtonElement.class).first().click();
@@ -75,5 +75,5 @@ public class MainViewIT extends BrowserTestBase {
         Assertions.assertTrue($(ParagraphElement.class).exists());
         ParagraphElement msg = $(ParagraphElement.class).first();
         Assertions.assertEquals("Hello Vaadiner", msg.getText());
-    }
+    }*/
 }

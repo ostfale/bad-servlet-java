@@ -1,4 +1,4 @@
-package de.ostfale.va;
+package de.ostfale.va.ui;
 
 import com.vaadin.flow.server.ErrorHandler;
 import com.vaadin.flow.server.VaadinServlet;
