@@ -12,24 +12,31 @@ import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import de.ostfale.va.ui.views.AboutView;
 import de.ostfale.va.ui.views.OverviewView;
+import de.ostfale.va.ui.views.TournamentView;
 
-import static com.vaadin.flow.component.icon.VaadinIcon.DASHBOARD;
-import static com.vaadin.flow.component.icon.VaadinIcon.USER_HEART;
+import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 public class MainLayout extends AppLayout {
 
+    private static final String APP_TITLE = "Bad-Stat (Java - Servlet)";
+
     public MainLayout() {
-        createHeaderContent();
+        setPrimarySection(Section.DRAWER);
+        addDrawerContent();
+        addNavbarContent();
     }
 
-    private void createHeaderContent() {
-        H1 appTitle = new H1("Bad-Stat (Java - Servlet)");
+    private void addDrawerContent() {
+        H1 appTitle = new H1(APP_TITLE);
         appTitle.addClassNames(LumoUtility.FontSize.MEDIUM, LumoUtility.Margin.AUTO, LumoUtility.AlignContent.CENTER);
 
-        SideNav views = getPrimaryNavigation();
-        Scroller scroller = new Scroller(views);
+        Scroller scroller = new Scroller(getPrimaryNavigation());
         scroller.setClassName(LumoUtility.Padding.SMALL);
 
+        addToDrawer(appTitle, scroller);
+    }
+
+    private void addNavbarContent() {
         DrawerToggle toggle = new DrawerToggle();
 
         HorizontalLayout wrapper = new HorizontalLayout(toggle);
@@ -40,16 +47,14 @@ public class MainLayout extends AppLayout {
         viewHeader.setPadding(false);
         viewHeader.setSpacing(false);
 
-        addToDrawer(appTitle, scroller);
         addToNavbar(viewHeader);
-
-        setPrimarySection(Section.DRAWER);
     }
 
     private SideNav getPrimaryNavigation() {
         SideNav sideNav = new SideNav();
         sideNav.addItem(
                 new SideNavItem("Overview", "/" + OverviewView.PATH, DASHBOARD.create()),
+                new SideNavItem("Tournaments", "/" + TournamentView.PATH, LINES_LIST.create()),
                 new SideNavItem("About", "/" + AboutView.PATH, USER_HEART.create())
         );
         return sideNav;
