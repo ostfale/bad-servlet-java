@@ -11,7 +11,7 @@ import org.openqa.selenium.Keys;
 import com.vaadin.testbench.BrowserTest;
 import com.vaadin.testbench.BrowserTestBase;
 
-public class MainLayoutIT extends BrowserTestBase {
+public class MainViewIT extends BrowserTestBase {
 
     /**
      * If running on CI, get the host name from environment variable HOSTNAME

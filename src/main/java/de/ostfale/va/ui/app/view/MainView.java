@@ -1,4 +1,4 @@
-package de.ostfale.va.ui;
+package de.ostfale.va.ui.app.view;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -9,21 +9,34 @@ import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
+import com.vaadin.flow.router.HasDynamicTitle;
+import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import de.ostfale.va.ui.views.AboutView;
+import de.ostfale.va.common.UseLogging;
 import de.ostfale.va.ui.views.OverviewView;
-import de.ostfale.va.ui.views.TournamentView;
+import de.ostfale.va.ui.tournament.view.TournamentView;
+
+import java.time.LocalDate;
 
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
-public class MainLayout extends AppLayout {
+@Route(value = "home")
+@RouteAlias(value = "")
+public class MainView extends AppLayout implements UseLogging, HasDynamicTitle {
 
     private static final String APP_TITLE = "Bad-Stat (Java - Servlet)";
 
-    public MainLayout() {
+    public MainView() {
         setPrimarySection(Section.DRAWER);
         addDrawerContent();
         addNavbarContent();
+    }
+
+    @Override
+    public String getPageTitle() {
+        var dateToday = LocalDate.now();
+        return "Bad-Stat " + dateToday;
     }
 
     private void addDrawerContent() {

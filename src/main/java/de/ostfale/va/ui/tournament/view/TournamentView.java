@@ -1,4 +1,4 @@
-package de.ostfale.va.ui.views;
+package de.ostfale.va.ui.tournament.view;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H2;
@@ -8,17 +8,16 @@ import de.ostfale.va.application.domain.model.Tournament;
 import de.ostfale.va.application.domain.service.LoadTournamentsService;
 import de.ostfale.va.application.port.in.LoadTournamentsFromMemory;
 import de.ostfale.va.common.UseLogging;
-import de.ostfale.va.ui.MainLayout;
+import de.ostfale.va.ui.app.view.MainView;
 
 
-@Route(value = TournamentView.PATH, layout = MainLayout.class)
+@Route(value = TournamentView.PATH, layout = MainView.class)
 public class TournamentView extends VerticalLayout implements UseLogging {
 
     public static final String PATH = "tournament";
     private final Grid<Tournament> grid = new Grid<>(Tournament.class, false);
 
     private final LoadTournamentsService loadTournamentsService = new LoadTournamentsService(new LoadTournamentsFromMemory());
-
 
     public TournamentView() {
         log().info("TournamentView :: constructor");
