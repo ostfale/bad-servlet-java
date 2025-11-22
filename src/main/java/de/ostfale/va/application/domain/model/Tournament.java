@@ -1,10 +1,17 @@
 package de.ostfale.va.application.domain.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record Tournament(
-        String name,
+        LocalDate startDate,
+        LocalDate closedDate,
+        String tournamentName,
+        String categoryName,
         String location,
-        LocalDate date
+        String organizer,
+        String webLinkUrl,
+        String pdfLinkUrl,
+        List<AgeClassDisciplines> ageClassDisciplines
 ) {
 }

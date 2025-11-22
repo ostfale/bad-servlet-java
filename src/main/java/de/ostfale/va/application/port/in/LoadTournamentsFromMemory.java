@@ -1,5 +1,7 @@
 package de.ostfale.va.application.port.in;
 
+import de.ostfale.va.application.domain.model.AgeClass;
+import de.ostfale.va.application.domain.model.AgeClassDisciplines;
 import de.ostfale.va.application.domain.model.Tournament;
 import de.ostfale.va.common.UseLogging;
 
@@ -22,13 +24,25 @@ public class LoadTournamentsFromMemory implements LoadTournamentsUseCase, UseLog
     private List<Tournament> initTournaments() {
         log().info("LoadTournamentsFromMemory :: initTournaments");
         return List.of(
-                createTournament("C-RL", "Hamburg", LocalDate.of(2025, 11, 25)),
-                createTournament("B-RL", "Hannover", LocalDate.of(2025, 12, 7)),
-                createTournament("A-RL", "Bremen", LocalDate.of(2025, 12, 17))
+                new Tournament(createDate(1, 10), createDate(1, 2), "C-RLT", "B-Level", "Kleinblittersdorf", "Saarland", "", "", createDisciplines()),
+                new Tournament(createDate(2, 5), createDate(1, 15), "A-RLT", "A-Level", "Augsburg", "Bayern", "", "https://turniere.badminton.de/uploads/1306.pdf", createDisciplines()),
+                new Tournament(createDate(2, 22), createDate(2, 3), "C-RLT THÜ", "C2-Level", "Gera", "Thüringen", "https://dbv.turnier.de/tournament/46A2907B-F220-4339-B396-F07EDFBAC794", "", createDisciplines())
         );
     }
 
-    private Tournament createTournament(String name, String location, LocalDate date) {
-        return new Tournament(name, location, date);
+    private List<AgeClassDisciplines> createDisciplines() {
+        return List.of(
+                createDiscipline(AgeClass.U15, true, true, true),
+                createDiscipline(AgeClass.U17, true, false, false),
+                createDiscipline(AgeClass.U19, false, true, true)
+        );
+    }
+
+    private AgeClassDisciplines createDiscipline(AgeClass ageClass, boolean isSingle, boolean isDouble, boolean isMixed) {
+        return new AgeClassDisciplines(ageClass, isSingle, isDouble, isMixed);
+    }
+
+    private LocalDate createDate(int month, int day) {
+        return LocalDate.of(2026, month, day);
     }
 }
