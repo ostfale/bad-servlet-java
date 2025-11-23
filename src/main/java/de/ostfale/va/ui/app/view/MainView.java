@@ -14,8 +14,8 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import de.ostfale.va.common.UseLogging;
+import de.ostfale.va.ui.tournament.view.TournamentMasterDetailLayout;
 import de.ostfale.va.ui.views.OverviewView;
-import de.ostfale.va.ui.tournament.view.TournamentView;
 
 import java.time.LocalDate;
 
@@ -67,7 +67,7 @@ public class MainView extends AppLayout implements UseLogging, HasDynamicTitle {
         SideNav sideNav = new SideNav();
         sideNav.addItem(
                 new SideNavItem("Overview", "/" + OverviewView.PATH, DASHBOARD.create()),
-                new SideNavItem("Tournaments", "/" + TournamentView.PATH, LINES_LIST.create()),
+                new SideNavItem("Tournaments", "/" + TournamentMasterDetailLayout.PATH, LINES_LIST.create()),
                 new SideNavItem("About", "/" + AboutView.PATH, USER_HEART.create())
         );
         return sideNav;

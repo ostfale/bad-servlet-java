@@ -16,4 +16,12 @@ vaadin-text-field.bordered::part(input-field) {
   background-color: var(--lumo-base-color);
 }
 
+.tournament-grid::part(header-cell) {
+    font-family: 'Courier New', monospace; /* Example font change */
+    font-weight: bold;
+    font-size: 1.1em;
+    color: var(--lumo-primary-color); /* Using a Lumo variable */
+    background-color: #f0f0f0; /* Optional background change */
+}
+
 
