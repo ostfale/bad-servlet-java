@@ -1,7 +1,6 @@
 package de.ostfale.va.application.domain.service;
 
 import de.ostfale.va.application.domain.model.Tournament;
-import de.ostfale.va.application.port.in.LoadTournamentsFromMemory;
 import de.ostfale.va.application.port.in.LoadTournamentsUseCase;
 import de.ostfale.va.common.UseLogging;
 
