@@ -7,4 +7,8 @@ import java.util.List;
 public interface LoadTournamentsUseCase {
 
     List<Tournament> loadTournaments();
+
+    List<Tournament> filter(TournamentsFilter filter);
+
+    int count(TournamentsFilter filter);
 }
