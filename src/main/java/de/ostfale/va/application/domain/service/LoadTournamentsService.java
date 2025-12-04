@@ -54,11 +54,4 @@ public class LoadTournamentsService implements LoadTournamentsUseCase, UseLoggin
 
         return true;
     }
-
-    private boolean matches(TournamentsFilter tournamentsFilter, Tournament tournament) {
-
-        return tournamentsFilter.location()
-                .map(searchLocation -> tournament.location().toLowerCase().contains(searchLocation.toLowerCase()))
-                .orElse(false);
-    }
 }

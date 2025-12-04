@@ -1,4 +1,4 @@
-package de.ostfale.va.ui.tournament.view;
+package de.ostfale.va.ui.tournament.controls;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.grid.Grid;
@@ -7,30 +7,37 @@ import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import de.ostfale.va.application.domain.model.Tournament;
-import de.ostfale.va.application.domain.service.LoadTournamentsService;
 import de.ostfale.va.application.port.in.LoadTournamentsFromCSV;
-import de.ostfale.va.application.port.in.LoadTournamentsFromMemory;
 import de.ostfale.va.application.port.in.TournamentsFilter;
 import de.ostfale.va.common.UseLogging;
 
 import java.util.List;
 
-public class TournamentList extends VerticalLayout implements UseLogging {
-
-    private final LoadTournamentsService loadTournamentsService = new LoadTournamentsService(new LoadTournamentsFromCSV().getAllTournaments());
+public class TournamentListComponent extends VerticalLayout implements UseLogging {
 
     private final Grid<Tournament> grid;
+    private final PaginationComponent paginationComponent;
 
     private List<Tournament> currentTournaments;
+    private DataProvider<Tournament, TournamentsFilter> dataProvider;
 
-    public TournamentList() {
+    public TournamentListComponent(DataProvider<Tournament, TournamentsFilter> pagingDataProvider, PaginationComponent paginationComponent) {
         log().debug("TournamentList :: Init tournament list view");
+        this.dataProvider = pagingDataProvider;
+        this.paginationComponent = paginationComponent;
         this.grid = new Grid<>();
         configureGrid();
-        add(grid);
+        add(grid, paginationComponent);
+        setFlexGrow(1, grid);
+
+        this.paginationComponent.setPageChangedListener(() -> {
+            grid.setPageSize(paginationComponent.getPageSize());
+            grid.getDataProvider().refreshAll();
+        });
     }
 
     private void configureGrid() {
@@ -41,22 +48,11 @@ public class TournamentList extends VerticalLayout implements UseLogging {
         addColumns();
 
         // Initialize with all tournaments
-        currentTournaments = loadTournamentsService.loadTournaments();
+        currentTournaments = new LoadTournamentsFromCSV().getAllTournaments();
 
-        // Create lazy data provider for pagination
-        DataProvider<Tournament, Void> dataProvider = DataProvider.fromCallbacks(
-                query -> {
-                    int offset = query.getOffset();
-                    int limit = query.getLimit();
-                    return currentTournaments.stream()
-                            .skip(offset)
-                            .limit(limit);
-                },
-                query -> currentTournaments.size()
-        );
-
+        var dataProvider = this.dataProvider.withConfigurableFilter();
         grid.setDataProvider(dataProvider);
-        grid.setPageSize(20);
+        grid.setPageSize(paginationComponent.getPageSize());
     }
 
     private void addColumns() {
@@ -88,8 +84,10 @@ public class TournamentList extends VerticalLayout implements UseLogging {
     }
 
     public void refresh(TournamentsFilter filter) {
-        currentTournaments = loadTournamentsService.filter(filter);
-        grid.getDataProvider().refreshAll();
+        paginationComponent.reset();
+        @SuppressWarnings("unchecked")
+        var dataProvider = (ConfigurableFilterDataProvider<Tournament, Void, TournamentsFilter>) grid.getDataProvider();
+        dataProvider.setFilter(filter);
     }
 
     public Grid<Tournament> getGrid() {

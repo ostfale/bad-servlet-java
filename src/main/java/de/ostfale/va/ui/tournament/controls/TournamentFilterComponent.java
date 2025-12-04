@@ -1,4 +1,4 @@
-package de.ostfale.va.ui.tournament.view;
+package de.ostfale.va.ui.tournament.controls;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
@@ -13,7 +13,7 @@ import com.vaadin.flow.shared.Registration;
 import de.ostfale.va.application.port.in.TournamentsFilter;
 import de.ostfale.va.common.UseLogging;
 
-public class TournamentFilterPanel extends VerticalLayout implements UseLogging {
+public class TournamentFilterComponent extends VerticalLayout implements UseLogging {
 
     private static final String TOURNAMENT_VIEW_NAME = "Termine des DBV";
     private static final String TOURNAMENT_NAME_FILTER = "Turniername";
@@ -33,10 +33,21 @@ public class TournamentFilterPanel extends VerticalLayout implements UseLogging 
     private final Button applyButton = new Button(FILTER_BUTTON_LABEL);
     private final Button clearButton = new Button(RESET_BUTTON_LABEL);
 
-    public TournamentFilterPanel() {
+    public TournamentFilterComponent() {
         log().debug("TournamentFilterPanel :: constructor");
         initLayoutSettings();
         add(createTitle(), createFilterLayout(), createButtonLayout());
+    }
+
+    public TournamentsFilter getCurrentFilter() {
+        return TournamentsFilter.builder()
+                .withName(nameFilter.getValue())
+                .withLocation(locationFilter.getValue())
+                .build();
+    }
+
+    public Registration addFilterChangeListener(ComponentEventListener<FilterChangeEvent> listener) {
+        return addListener(FilterChangeEvent.class, listener);
     }
 
     private void initLayoutSettings() {
@@ -76,13 +87,6 @@ public class TournamentFilterPanel extends VerticalLayout implements UseLogging 
         return buttons;
     }
 
-    public TournamentsFilter getCurrentFilter() {
-        return TournamentsFilter.builder()
-                .withName(nameFilter.getValue())
-                .withLocation(locationFilter.getValue())
-                .build();
-    }
-
     private void clearFilters() {
         nameFilter.clear();
         locationFilter.clear();
@@ -93,14 +97,10 @@ public class TournamentFilterPanel extends VerticalLayout implements UseLogging 
         fireEvent(new FilterChangeEvent(this, false, getCurrentFilter()));
     }
 
-    public Registration addFilterChangeListener(ComponentEventListener<FilterChangeEvent> listener) {
-        return addListener(FilterChangeEvent.class, listener);
-    }
-
-    public static class FilterChangeEvent extends ComponentEvent<TournamentFilterPanel> {
+    public static class FilterChangeEvent extends ComponentEvent<TournamentFilterComponent> {
         private final TournamentsFilter filter;
 
-        public FilterChangeEvent(TournamentFilterPanel source, boolean fromClient, TournamentsFilter filter) {
+        public FilterChangeEvent(TournamentFilterComponent source, boolean fromClient, TournamentsFilter filter) {
             super(source, fromClient);
             this.filter = filter;
         }
@@ -109,4 +109,5 @@ public class TournamentFilterPanel extends VerticalLayout implements UseLogging 
             return filter;
         }
     }
+
 }

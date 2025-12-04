@@ -1,4 +1,4 @@
-package de.ostfale.va.ui.tournament.view;
+package de.ostfale.va.ui.tournament.controls;
 
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -9,12 +9,12 @@ import com.vaadin.flow.shared.Registration;
 import de.ostfale.va.application.domain.model.Tournament;
 import de.ostfale.va.common.UseLogging;
 
-public class TournamentDetails extends VerticalLayout implements UseLogging {
+public class TournamentDetailsComponent extends VerticalLayout implements UseLogging {
 
     private final FormLayout formLayout;
     private final TextField tournamentNameField;
 
-    public TournamentDetails() {
+    public TournamentDetailsComponent() {
         this.formLayout = new FormLayout();
         tournamentNameField = new TextField("Tournament Name");
         tournamentNameField.setReadOnly(true);
@@ -36,8 +36,8 @@ public class TournamentDetails extends VerticalLayout implements UseLogging {
         return addListener(CloseEvent.class, listener);
     }
 
-    public static class CloseEvent extends ComponentEvent<TournamentDetails> {
-        public CloseEvent(TournamentDetails source, boolean fromClient) {
+    public static class CloseEvent extends ComponentEvent<TournamentDetailsComponent> {
+        public CloseEvent(TournamentDetailsComponent source, boolean fromClient) {
             super(source, fromClient);
         }
     }
