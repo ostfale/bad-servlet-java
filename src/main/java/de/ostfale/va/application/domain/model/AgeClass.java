@@ -1,8 +1,5 @@
 package de.ostfale.va.application.domain.model;
 
-import com.github.javaparser.utils.Log;
-import de.ostfale.va.common.UseLogging;
-
 public enum AgeClass {
     U9, U11, U13, U15, U17, U19, U22, O19, O35, UOX;
 

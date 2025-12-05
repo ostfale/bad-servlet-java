@@ -35,7 +35,7 @@ public enum TourCategory {
     }
 
     public static TourCategory[] getFilterValues() {
-        return new TourCategory[]{A, B, BEC, BWF, C, D, E};
+        return new TourCategory[]{BEC, BWF, A, B, C, D, E};
     }
 
     public String getDisplayName() {

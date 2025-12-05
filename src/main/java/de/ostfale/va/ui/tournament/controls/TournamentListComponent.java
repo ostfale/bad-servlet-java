@@ -95,6 +95,7 @@ public class TournamentListComponent extends VerticalLayout implements UseLoggin
         layout.setWidthFull();
 
         if (url != null && !url.isEmpty()) {
+            icon.addClassName("tournament-link-icon");
             Anchor link = new Anchor(url, icon);
             link.setTarget("_blank");
             layout.add(link);

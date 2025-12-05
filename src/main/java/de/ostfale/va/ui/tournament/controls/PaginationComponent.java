@@ -14,6 +14,8 @@ import de.ostfale.va.common.UseLogging;
 
 public class PaginationComponent extends HorizontalLayout implements UseLogging {
 
+    private static final int DEFAULT_PAGE_SIZE = 25;
+
     private final Span currentPageLabel;
     private final Button firstPageButton;
     private final Button lastPageButton;
@@ -23,7 +25,7 @@ public class PaginationComponent extends HorizontalLayout implements UseLogging 
     private Runnable pageChangedListener;
     private int totalItemCount = 0;
     private int pageCount = 1;
-    private int pageSize = 10;
+    private int pageSize = DEFAULT_PAGE_SIZE;
     private int currentPage = 1;
 
     public PaginationComponent() {
