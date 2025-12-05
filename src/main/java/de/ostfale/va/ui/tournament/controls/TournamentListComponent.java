@@ -6,24 +6,22 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import de.ostfale.va.application.domain.model.Tournament;
-import de.ostfale.va.application.port.in.LoadTournamentsFromCSV;
 import de.ostfale.va.application.port.in.TournamentsFilter;
 import de.ostfale.va.common.UseLogging;
-
-import java.util.List;
 
 public class TournamentListComponent extends VerticalLayout implements UseLogging {
 
     private final Grid<Tournament> grid;
     private final PaginationComponent paginationComponent;
 
-    private List<Tournament> currentTournaments;
-    private DataProvider<Tournament, TournamentsFilter> dataProvider;
+    private final DataProvider<Tournament, TournamentsFilter> dataProvider;
 
     public TournamentListComponent(DataProvider<Tournament, TournamentsFilter> pagingDataProvider, PaginationComponent paginationComponent) {
         log().debug("TournamentList :: Init tournament list view");
@@ -46,9 +44,6 @@ public class TournamentListComponent extends VerticalLayout implements UseLoggin
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 
         addColumns();
-
-        // Initialize with all tournaments
-        currentTournaments = new LoadTournamentsFromCSV().getAllTournaments();
 
         var dataProvider = this.dataProvider.withConfigurableFilter();
         grid.setDataProvider(dataProvider);
@@ -95,11 +90,17 @@ public class TournamentListComponent extends VerticalLayout implements UseLoggin
     }
 
     private Component createLinkComponent(String url, Component icon) {
+        HorizontalLayout layout = new HorizontalLayout();
+        layout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        layout.setWidthFull();
+
         if (url != null && !url.isEmpty()) {
             Anchor link = new Anchor(url, icon);
             link.setTarget("_blank");
-            return link;
+            layout.add(link);
+        } else {
+            layout.add(new Span("-"));
         }
-        return new Span("-");
+        return layout;
     }
 }

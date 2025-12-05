@@ -6,9 +6,9 @@ import de.ostfale.va.application.port.in.TournamentsFilter;
 import de.ostfale.va.common.UseLogging;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Stream;
 
-public class LoadTournamentsService implements LoadTournamentsUseCase, UseLogging{
+public class LoadTournamentsService implements LoadTournamentsUseCase, UseLogging {
 
     private final List<Tournament> tournaments;
 
@@ -16,42 +16,41 @@ public class LoadTournamentsService implements LoadTournamentsUseCase, UseLoggin
         this.tournaments = tournaments;
     }
 
-    public List<Tournament> loadTournaments() {
-        return tournaments;
+    @Override
+    public List<Tournament> getAllTournaments() {
+        return List.of();
     }
 
     @Override
-    public List<Tournament> filter(TournamentsFilter filter) {
-        Objects.requireNonNull(filter, "'filter' must not be null");
-        List<Tournament> filteredTournaments = tournaments.stream()
+    public Stream<Tournament> fetch(TournamentsFilter filter, int offset, int limit) {
+        return tournaments.stream()
                 .filter(tournament -> matchesFilter(tournament, filter))
-                .toList();
-
-        log().debug("Applied filter: {} tournaments found", filteredTournaments.size());
-        return filteredTournaments;
+                .skip(offset)
+                .limit(limit);
     }
 
     @Override
     public int count(TournamentsFilter filter) {
-        return filter(filter).size();
+        int result = (int) tournaments.stream()
+                .filter(tournament -> matchesFilter(tournament, filter))
+                .count();
+        log().debug("DataSource :: Found {} tournaments", result);
+        return result;
     }
 
     private boolean matchesFilter(Tournament tournament, TournamentsFilter filter) {
-
-        // Check name filter
-        if (filter.name().isPresent() && !filter.name().get().isEmpty()) {
-            String nameFilter = filter.name().get().toLowerCase();
-            if (!tournament.tournamentName().toLowerCase().contains(nameFilter)) {
-                return false;
-            }
+        if (filter == null) {
+            return true;
         }
 
-        // Check location filter
-        if (filter.location().isPresent() && !filter.location().get().isEmpty()) {
-            String locationFilter = filter.location().get().toLowerCase();
-            return tournament.location().toLowerCase().contains(locationFilter);
-        }
+        return matches(filter.name().orElse(null), tournament.tournamentName())
+                && matches(filter.location().orElse(null), tournament.location());
+    }
 
-        return true;
+    private boolean matches(String filterValue, String actualValue) {
+        if (filterValue == null || filterValue.isEmpty()) {
+            return true;
+        }
+        return actualValue != null && actualValue.toLowerCase().contains(filterValue.toLowerCase());
     }
 }

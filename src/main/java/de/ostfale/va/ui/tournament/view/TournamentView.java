@@ -6,6 +6,9 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.router.Route;
 import de.ostfale.va.application.domain.model.Tournament;
+import de.ostfale.va.application.domain.service.LoadTournamentsService;
+import de.ostfale.va.application.port.in.LoadTournamentsFromCSV;
+import de.ostfale.va.application.port.in.LoadTournamentsUseCase;
 import de.ostfale.va.application.port.in.TournamentsFilter;
 import de.ostfale.va.common.UseLogging;
 import de.ostfale.va.ui.app.view.MainView;
@@ -18,35 +21,12 @@ import java.util.stream.Stream;
 public class TournamentView extends VerticalLayout implements UseLogging {
 
     public static final String PATH = "tournament-view";
+
     private final PaginationComponent paginationComponent = new PaginationComponent();
-    private final DataSource dataSource = new DataSource();
+    private final LoadTournamentsUseCase loadTournamentsUC = new LoadTournamentsService(new LoadTournamentsFromCSV().getAllTournaments());
 
     private final DataProvider<Tournament, TournamentsFilter> pagingDataProvider =
             DataProvider.fromFilteringCallbacks(this::fetchTournaments, this::countTournaments);
-
-    private Stream<Tournament> fetchTournaments(Query<Tournament, TournamentsFilter> query) {
-        // Use the offset and limit provided by the Grid's query (via PaginationComponent)
-        var offset = paginationComponent.calculateOffset();
-        var limit = paginationComponent.getPageSize();
-        var filter = query.getFilter().orElse(null);
-
-        log().debug("TournamentView :: pagingDataProvider :: limit: {}, offset: {}", limit, offset);
-        // Pass query parameters directly to the backend
-        return dataSource.fetch(filter, offset, limit);
-    }
-
-    private int countTournaments(Query<Tournament, TournamentsFilter> query) {
-        var filter = query.getFilter().orElse(null);
-        // Get TOTAL count for the pagination component to update UI buttons
-        int totalItems = dataSource.count(filter);
-        paginationComponent.setTotalItemCount(totalItems);
-
-        // Return the count of items for the CURRENT PAGE only to the Grid
-        // This tricks the Grid into displaying only the current page's worth of data
-        var offset = paginationComponent.calculateOffset();
-        var limit = paginationComponent.getPageSize();
-        return Math.max(0, Math.min(limit, totalItems - offset));
-    }
 
     public TournamentView() {
         log().info("TournamentView :: constructor");
@@ -56,9 +36,33 @@ public class TournamentView extends VerticalLayout implements UseLogging {
         initLayout();
     }
 
+    private Stream<Tournament> fetchTournaments(Query<Tournament, TournamentsFilter> query) {
+        // Use the offset and limit provided by the Grid's query (via PaginationComponent)
+        var offset = paginationComponent.calculateOffset();
+        var limit = paginationComponent.getPageSize();
+        var filter = query.getFilter().orElse(null);
+
+        log().debug("TournamentView :: pagingDataProvider :: limit: {}, offset: {}", limit, offset);
+        // Pass query parameters directly to the backend
+        return loadTournamentsUC.fetch(filter, offset, limit);
+    }
+
+    private int countTournaments(Query<Tournament, TournamentsFilter> query) {
+        var filter = query.getFilter().orElse(null);
+        // Get TOTAL count for the pagination component to update UI buttons
+        int totalItems = loadTournamentsUC.count(filter);
+        paginationComponent.setTotalItemCount(totalItems);
+
+        // Return the count of items for the CURRENT PAGE only to the Grid
+        // This tricks the Grid into displaying only the current page's worth of data
+        var offset = paginationComponent.calculateOffset();
+        var limit = paginationComponent.getPageSize();
+        return Math.max(0, Math.min(limit, totalItems - offset));
+    }
+
     private void initLayout() {
         log().debug("TournamentView :: initLayout");
-        var tournamentListComponent = createTournamentListComponent(pagingDataProvider,paginationComponent);
+        var tournamentListComponent = createTournamentListComponent(pagingDataProvider, paginationComponent);
         var tournamentFilterComponent = createFilterComponent(tournamentListComponent);
         var tournamentMasterDetailComponent = createTournamentMasterDetailComponent(tournamentListComponent);
 
@@ -89,7 +93,7 @@ public class TournamentView extends VerticalLayout implements UseLogging {
 
     private TournamentListComponent createTournamentListComponent(DataProvider<Tournament, TournamentsFilter> pagingDataProvider, PaginationComponent paginationComponent) {
         log().debug("TournamentView :: createTournamentListComponent");
-        var component = new TournamentListComponent(pagingDataProvider,paginationComponent);
+        var component = new TournamentListComponent(pagingDataProvider, paginationComponent);
         component.setSizeFull();
         return component;
     }
