@@ -1,6 +1,7 @@
 package de.ostfale.va.application.port.in;
 
 import de.ostfale.va.application.domain.model.AgeClass;
+import de.ostfale.va.application.domain.model.TourCategory;
 import de.ostfale.va.common.UseLogging;
 
 import java.util.Collections;
@@ -13,14 +14,22 @@ public class TournamentsFilter implements UseLogging {
     private final boolean validTournamentsOnly;
     private final boolean onlyThisYearsTournaments;
     private final Set<AgeClass> ageClasses;
+    private final Set<TourCategory> tourCategories;
 
-    public TournamentsFilter(String location, String name, boolean validTournamentsOnly, boolean onlyThisYearsTournaments, Set<AgeClass> ageClasses) {
+    public TournamentsFilter(String location,
+                             String name,
+                             boolean validTournamentsOnly,
+                             boolean onlyThisYearsTournaments,
+                             Set<AgeClass> ageClasses,
+                             Set<TourCategory> tourCategories
+    ) {
         log().debug("TournamentsFilter :: constructor");
         this.location = location;
         this.name = name;
-        this.validTournamentsOnly =validTournamentsOnly;
+        this.validTournamentsOnly = validTournamentsOnly;
         this.onlyThisYearsTournaments = onlyThisYearsTournaments;
         this.ageClasses = (ageClasses != null) ? ageClasses : Collections.emptySet();
+        this.tourCategories = (tourCategories != null) ? tourCategories : Collections.emptySet();
     }
 
     public static Builder builder() {
@@ -47,6 +56,21 @@ public class TournamentsFilter implements UseLogging {
         return ageClasses;
     }
 
+    public Set<TourCategory> tourCategories() {
+        return tourCategories;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("""
+                        TournamentsFilter:
+                          valid tournaments: %b
+                          only this year:    %b
+                          name:              %s
+                          location:          %s""",
+                validTournamentsOnly, onlyThisYearsTournaments, name, location);
+    }
+
     public static final class Builder {
         private String location;
         private String name;
@@ -54,6 +78,7 @@ public class TournamentsFilter implements UseLogging {
         private boolean validTournamentsOnly;
         private boolean onlyThisYearsTournaments;
         private Set<AgeClass> ageClasses;
+        private Set<TourCategory> tourCategories;
 
         public Builder withLocation(String location) {
             this.location = location;
@@ -80,8 +105,13 @@ public class TournamentsFilter implements UseLogging {
             return this;
         }
 
+        public Builder withTourCategories(Set<TourCategory> tourCategories) {
+            this.tourCategories = tourCategories;
+            return this;
+        }
+
         public TournamentsFilter build() {
-            return new TournamentsFilter(location, name,validTournamentsOnly, onlyThisYearsTournaments, ageClasses);
+            return new TournamentsFilter(location, name, validTournamentsOnly, onlyThisYearsTournaments, ageClasses, tourCategories);
         }
     }
 }

@@ -79,10 +79,10 @@ public class TournamentListComponent extends VerticalLayout implements UseLoggin
     }
 
     public void refresh(TournamentsFilter filter) {
-        paginationComponent.reset();
         @SuppressWarnings("unchecked")
         var dataProvider = (ConfigurableFilterDataProvider<Tournament, Void, TournamentsFilter>) grid.getDataProvider();
         dataProvider.setFilter(filter);
+        paginationComponent.reset();
     }
 
     public Grid<Tournament> getGrid() {

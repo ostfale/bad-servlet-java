@@ -55,13 +55,16 @@ public class TournamentFilterComponent extends VerticalLayout implements UseLogg
     }
 
     public TournamentsFilter getCurrentFilter() {
-        return TournamentsFilter.builder()
+        var filter = TournamentsFilter.builder()
                 .withName(nameFilter.getValue())
                 .withLocation(locationFilter.getValue())
                 .withOnlyThisYearsTournaments(currentYearTournamentsCheckbox.getValue())
                 .withValidTournamentsOnly(remainingTournamentsCheckbox.getValue())
                 .withAgeClasses(ageClassFilter.getValue())
+                .withTourCategories(tourCategoryFilter.getValue())
                 .build();
+        log().info("TournamentFilterPanel :: getCurrentFilter: {}", filter);
+        return filter;
     }
 
     public void addFilterChangeListener(ComponentEventListener<FilterChangeEvent> listener) {
@@ -86,6 +89,7 @@ public class TournamentFilterComponent extends VerticalLayout implements UseLogg
 
         HorizontalLayout checkboxLayout = new HorizontalLayout(remainingTournamentsCheckbox, currentYearTournamentsCheckbox);
         checkboxLayout.setSpacing(true);
+
         return checkboxLayout;
     }
 

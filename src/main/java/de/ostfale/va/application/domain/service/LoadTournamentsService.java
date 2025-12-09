@@ -4,6 +4,7 @@ import de.ostfale.va.application.domain.model.AgeClass;
 import de.ostfale.va.application.domain.model.Tournament;
 import de.ostfale.va.application.port.in.LoadTournamentsUseCase;
 import de.ostfale.va.application.port.in.TournamentsFilter;
+import de.ostfale.va.common.UseCase;
 import de.ostfale.va.common.UseLogging;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+@UseCase
 public class LoadTournamentsService implements LoadTournamentsUseCase, UseLogging {
 
     private final List<Tournament> tournaments;
@@ -52,6 +54,10 @@ public class LoadTournamentsService implements LoadTournamentsUseCase, UseLoggin
             return false;
         }
 
+        if (filter.onlyThisYearsTournaments() && !isTournamentInThisYear(tournament)) {
+            return false;
+        }
+
         if (!matchesAgeClass(filter.ageClasses(), tournament)) {
             return false;
         }
@@ -74,8 +80,13 @@ public class LoadTournamentsService implements LoadTournamentsUseCase, UseLoggin
         return actualValue != null && actualValue.toLowerCase().contains(filterValue.toLowerCase());
     }
 
+    private boolean isTournamentInThisYear(Tournament tournament) {
+        log().trace("LoadTournamentsService  ::isTournamentInThisYear :: tournament = {}", tournament.startDate());
+        return LocalDate.now().getYear() == LocalDate.parse(tournament.startDate(), formatter).getYear();
+    }
+
     private boolean isTournamentBeforeToday(Tournament tournament) {
-        log().trace("isTournamentBeforeToday :: tournament = {}", tournament.startDate());
+        log().trace("LoadTournamentsService ::isTournamentBeforeToday :: tournament = {}", tournament.startDate());
         var today = LocalDate.now();
         var tournamentDate = LocalDate.parse(tournament.startDate(), formatter);
         return tournamentDate.isBefore(today);

@@ -1,7 +1,5 @@
 package de.ostfale.va.application.domain.model;
 
-import java.util.List;
-
 public record Tournament(
         String startDate,
         String endDate,
