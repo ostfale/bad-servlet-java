@@ -1,5 +1,6 @@
-package de.ostfale.va.application.port.in;
+package de.ostfale.va.adapter.out.persistence;
 
+import de.ostfale.va.adapter.out.LoadTournamentsPort;
 import de.ostfale.va.application.domain.model.TourCategory;
 import de.ostfale.va.application.domain.model.Tournament;
 import de.ostfale.va.application.domain.model.TournamentType;
@@ -7,12 +8,20 @@ import de.ostfale.va.common.UseLogging;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class LoadTournamentsFromCSV implements UseLogging {
+public class CsvTournamentAdapter implements LoadTournamentsPort, UseLogging {
+
+    @Override
+    public List<Tournament> loadAll() {
+        if (tournaments.isEmpty()) {
+            tournaments.addAll(parseTournamentCalendar(new File(getClass().getClassLoader().getResource("Turniere_25.csv").getFile())));
+        }
+        log().debug("LoadTournamentsFromCSV :: Tournaments loaded from CSV file = {}", tournaments.size());
+        return tournaments;
+    }
 
     private static final int DEFAULT_TOURNAMENT_ORDER = 0;
     private static final String HEADER_START_MARKER = "Start-Datum";
@@ -50,7 +59,6 @@ public class LoadTournamentsFromCSV implements UseLogging {
     static int AK_O19_INDEX = 27;
     static int AK_O35_INDEX = 27;
     private final List<Tournament> tournaments = new ArrayList<>();
-    DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
     private static String readCSVValue(String[] splitRow, int index) {
         if (index >= splitRow.length) {
@@ -83,14 +91,6 @@ public class LoadTournamentsFromCSV implements UseLogging {
             return false;
         }
         return str.trim().matches("\\d+");
-    }
-
-    public List<Tournament> getAllTournaments() {
-        if (tournaments.isEmpty()) {
-            tournaments.addAll(parseTournamentCalendar(new File(getClass().getClassLoader().getResource("Turniere_25.csv").getFile())));
-        }
-        log().debug("LoadTournamentsFromCSV :: Tournaments loaded from CSV file = {}", tournaments.size());
-        return tournaments;
     }
 
     public List<Tournament> parseTournamentCalendar(File aFile) {

@@ -1,4 +1,4 @@
-package de.ostfale.va.ui;
+package de.ostfale.va.adapter.in.web;
 
 import com.vaadin.flow.server.VaadinServlet;
 

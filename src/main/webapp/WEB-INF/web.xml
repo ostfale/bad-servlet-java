@@ -9,7 +9,7 @@
 
     <servlet>
         <servlet-name>AppServlet</servlet-name>
-        <servlet-class>de.ostfale.va.ui.AppServlet</servlet-class>
+        <servlet-class>de.ostfale.va.adapter.in.web.AppServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
         <async-supported>true</async-supported>
     </servlet>

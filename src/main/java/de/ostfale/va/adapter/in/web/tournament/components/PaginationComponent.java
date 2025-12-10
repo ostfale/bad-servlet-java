@@ -1,4 +1,4 @@
-package de.ostfale.va.ui.tournament.controls;
+package de.ostfale.va.adapter.in.web.tournament.components;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;

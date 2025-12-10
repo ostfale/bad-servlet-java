@@ -1,4 +1,4 @@
-package de.ostfale.va.ui.app.view;
+package de.ostfale.va.adapter.in.web.app;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -14,8 +14,8 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import de.ostfale.va.common.UseLogging;
-import de.ostfale.va.ui.tournament.view.TournamentView;
-import de.ostfale.va.ui.views.OverviewView;
+import de.ostfale.va.adapter.in.web.tournament.TournamentView;
+import de.ostfale.va.adapter.in.web.dashboard.OverviewView;
 
 import java.time.LocalDate;
 

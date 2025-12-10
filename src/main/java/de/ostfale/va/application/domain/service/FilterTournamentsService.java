@@ -1,37 +1,37 @@
 package de.ostfale.va.application.domain.service;
 
 import de.ostfale.va.application.domain.model.AgeClass;
+import de.ostfale.va.application.domain.model.TourCategory;
 import de.ostfale.va.application.domain.model.Tournament;
-import de.ostfale.va.application.port.in.LoadTournamentsUseCase;
+import de.ostfale.va.application.port.in.FilterTournamentsUseCase;
 import de.ostfale.va.application.port.in.TournamentsFilter;
+import de.ostfale.va.common.TimeHandlerFacade;
 import de.ostfale.va.common.UseCase;
 import de.ostfale.va.common.UseLogging;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
 @UseCase
-public class LoadTournamentsService implements LoadTournamentsUseCase, UseLogging {
+public class FilterTournamentsService implements FilterTournamentsUseCase, TimeHandlerFacade,UseLogging {
 
     private final List<Tournament> tournaments;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-    public LoadTournamentsService(List<Tournament> tournaments) {
+    public FilterTournamentsService(List<Tournament> tournaments) {
         this.tournaments = tournaments;
-    }
-
-    @Override
-    public List<Tournament> getAllTournaments() {
-        return List.of();
     }
 
     @Override
     public Stream<Tournament> fetch(TournamentsFilter filter, int offset, int limit) {
         return tournaments.stream()
                 .filter(tournament -> matchesFilter(tournament, filter))
+                .sorted((t1, t2) -> {
+                    LocalDate date1 = parseDateToTournamentFormat(t1.startDate());
+                    LocalDate date2 = parseDateToTournamentFormat(t2.startDate());
+                    return date1.compareTo(date2);
+                })
                 .skip(offset)
                 .limit(limit);
     }
@@ -62,6 +62,10 @@ public class LoadTournamentsService implements LoadTournamentsUseCase, UseLoggin
             return false;
         }
 
+        if (!matchesAnyCheckedTournamentCategory(filter.tourCategories(), tournament)) {
+            return false;
+        }
+
         return matches(filter.name().orElse(null), tournament.tournamentName())
                 && matches(filter.location().orElse(null), tournament.location());
     }
@@ -73,6 +77,13 @@ public class LoadTournamentsService implements LoadTournamentsUseCase, UseLoggin
         return filterAgeClasses.stream().anyMatch(tournament::isForAgeClass);
     }
 
+    private boolean matchesAnyCheckedTournamentCategory(Set<TourCategory> checkedAgeClasses, Tournament tournament) {
+        if (checkedAgeClasses == null || checkedAgeClasses.isEmpty()) {
+            return true;
+        }
+        return checkedAgeClasses.stream().anyMatch(tc -> tc.name().equalsIgnoreCase(tournament.tourCategory().getBaseCategory()));
+    }
+
     private boolean matches(String filterValue, String actualValue) {
         if (filterValue == null || filterValue.isEmpty()) {
             return true;
@@ -82,13 +93,13 @@ public class LoadTournamentsService implements LoadTournamentsUseCase, UseLoggin
 
     private boolean isTournamentInThisYear(Tournament tournament) {
         log().trace("LoadTournamentsService  ::isTournamentInThisYear :: tournament = {}", tournament.startDate());
-        return LocalDate.now().getYear() == LocalDate.parse(tournament.startDate(), formatter).getYear();
+        return LocalDate.now().getYear() == parseDateToTournamentFormat(tournament.startDate()).getYear();
     }
 
     private boolean isTournamentBeforeToday(Tournament tournament) {
         log().trace("LoadTournamentsService ::isTournamentBeforeToday :: tournament = {}", tournament.startDate());
         var today = LocalDate.now();
-        var tournamentDate = LocalDate.parse(tournament.startDate(), formatter);
+        var tournamentDate = parseDateToTournamentFormat(tournament.startDate());
         return tournamentDate.isBefore(today);
     }
 }

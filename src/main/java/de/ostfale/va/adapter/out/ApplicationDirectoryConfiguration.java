@@ -1,17 +1,14 @@
 package de.ostfale.va.adapter.out;
 
 import de.ostfale.va.application.port.out.DirectoryConfiguration;
+import de.ostfale.va.common.FileSystemFacade;
 import de.ostfale.va.common.UseLogging;
 
-import java.io.File;
 import java.util.List;
 
-public class ApplicationDirectoryConfiguration implements DirectoryConfiguration, UseLogging {
+public class ApplicationDirectoryConfiguration implements DirectoryConfiguration, FileSystemFacade, UseLogging {
 
-    private static final String SEP = File.separator;
     private static final String APP_NAME = ".bad-servlet";
-    private static final String USER_HOME = "user.home";
-
 
     @Override
     public String basePath() {

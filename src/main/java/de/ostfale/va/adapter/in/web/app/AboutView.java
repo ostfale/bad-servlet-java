@@ -1,4 +1,4 @@
-package de.ostfale.va.ui.app.view;
+package de.ostfale.va.adapter.in.web.app;
 
 
 import com.vaadin.flow.component.html.H1;
@@ -16,7 +16,7 @@ public class AboutView extends VerticalLayout {
         H1 title = new H1("About");
         H2 subtitle = new H2("Badminton App - Vaadin Servlet");
 
-        Paragraph version = new Paragraph("Version: 1.0.7");
+        Paragraph version = new Paragraph("Version: 1.0.8");
         Paragraph author = new Paragraph("Created by: Uwe Sauerbrei");
 
         setSpacing(true);

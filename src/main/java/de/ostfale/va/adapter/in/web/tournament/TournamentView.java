@@ -1,21 +1,22 @@
-package de.ostfale.va.ui.tournament.view;
+package de.ostfale.va.adapter.in.web.tournament;
 
 import com.vaadin.flow.component.masterdetaillayout.MasterDetailLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.router.Route;
+import de.ostfale.va.adapter.in.web.app.MainView;
+import de.ostfale.va.adapter.in.web.tournament.components.PaginationComponent;
+import de.ostfale.va.adapter.in.web.tournament.components.TournamentDetailsComponent;
+import de.ostfale.va.adapter.in.web.tournament.components.TournamentFilterComponent;
+import de.ostfale.va.adapter.in.web.tournament.components.TournamentListComponent;
 import de.ostfale.va.application.domain.model.Tournament;
-import de.ostfale.va.application.domain.service.LoadTournamentsService;
-import de.ostfale.va.application.port.in.LoadTournamentsFromCSV;
-import de.ostfale.va.application.port.in.LoadTournamentsUseCase;
+import de.ostfale.va.application.port.in.FilterTournamentsUseCase;
 import de.ostfale.va.application.port.in.TournamentsFilter;
+import de.ostfale.va.common.ServiceRegistry;
 import de.ostfale.va.common.UseLogging;
-import de.ostfale.va.ui.app.view.MainView;
-import de.ostfale.va.ui.tournament.controls.*;
 
 import java.util.stream.Stream;
-
 
 @Route(value = TournamentView.PATH, layout = MainView.class)
 public class TournamentView extends VerticalLayout implements UseLogging {
@@ -23,12 +24,18 @@ public class TournamentView extends VerticalLayout implements UseLogging {
     public static final String PATH = "tournament-view";
 
     private final PaginationComponent paginationComponent = new PaginationComponent();
-    private final LoadTournamentsUseCase loadTournamentsUC = new LoadTournamentsService(new LoadTournamentsFromCSV().getAllTournaments());
 
-    private final DataProvider<Tournament, TournamentsFilter> pagingDataProvider =
-            DataProvider.fromFilteringCallbacks(this::fetchTournaments, this::countTournaments);
+    // Configured via Registry, typed as the Interface
+    private final FilterTournamentsUseCase filterTournamentsUseCase;
+
+    private final DataProvider<Tournament, TournamentsFilter> pagingDataProvider;
 
     public TournamentView() {
+        // Manual lookup from the Registry
+        // This keeps the View ignorant of "FilterTournamentsService" or "CSVParser"
+        this.filterTournamentsUseCase = ServiceRegistry.getInstance().getFilterTournamentsUseCase();
+        this.pagingDataProvider = DataProvider.fromFilteringCallbacks(this::fetchTournaments, this::countTournaments);
+
         log().info("TournamentView :: constructor");
         setSizeFull();
         setPadding(true);
@@ -44,13 +51,13 @@ public class TournamentView extends VerticalLayout implements UseLogging {
 
         log().debug("TournamentView :: pagingDataProvider :: limit: {}, offset: {}", limit, offset);
         // Pass query parameters directly to the backend
-        return loadTournamentsUC.fetch(filter, offset, limit);
+        return filterTournamentsUseCase.fetch(filter, offset, limit);
     }
 
     private int countTournaments(Query<Tournament, TournamentsFilter> query) {
         var filter = query.getFilter().orElse(null);
         // Get TOTAL count for the pagination component to update UI buttons
-        int totalItems = loadTournamentsUC.count(filter);
+        int totalItems = filterTournamentsUseCase.count(filter);
         paginationComponent.setTotalItemCount(totalItems);
 
         // Return the count of items for the CURRENT PAGE only to the Grid
