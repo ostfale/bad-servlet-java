@@ -12,8 +12,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import de.ostfale.va.application.domain.model.Tournament;
-import de.ostfale.va.application.port.in.TournamentsFilter;
+import de.ostfale.va.application.domain.model.tournaments.Tournament;
+import de.ostfale.va.application.port.in.tournaments.TournamentsFilter;
 import de.ostfale.va.common.UseLogging;
 
 public class TournamentListComponent extends VerticalLayout implements UseLogging {

@@ -10,9 +10,9 @@ import de.ostfale.va.adapter.in.web.tournament.components.PaginationComponent;
 import de.ostfale.va.adapter.in.web.tournament.components.TournamentDetailsComponent;
 import de.ostfale.va.adapter.in.web.tournament.components.TournamentFilterComponent;
 import de.ostfale.va.adapter.in.web.tournament.components.TournamentListComponent;
-import de.ostfale.va.application.domain.model.Tournament;
+import de.ostfale.va.application.domain.model.tournaments.Tournament;
 import de.ostfale.va.application.port.in.FilterTournamentsUseCase;
-import de.ostfale.va.application.port.in.TournamentsFilter;
+import de.ostfale.va.application.port.in.tournaments.TournamentsFilter;
 import de.ostfale.va.common.ServiceRegistry;
 import de.ostfale.va.common.UseLogging;
 

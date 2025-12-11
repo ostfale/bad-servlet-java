@@ -11,9 +11,9 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import de.ostfale.va.application.domain.model.AgeClass;
-import de.ostfale.va.application.domain.model.TourCategory;
-import de.ostfale.va.application.port.in.TournamentsFilter;
+import de.ostfale.va.application.domain.model.tournaments.AgeClass;
+import de.ostfale.va.application.domain.model.tournaments.TourCategory;
+import de.ostfale.va.application.port.in.tournaments.TournamentsFilter;
 import de.ostfale.va.common.UseLogging;
 
 public class TournamentFilterComponent extends VerticalLayout implements UseLogging {

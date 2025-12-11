@@ -1,7 +1,7 @@
 package de.ostfale.va.application.domain.service;
 
 import com.github.javaparser.utils.Log;
-import de.ostfale.va.adapter.out.ApplicationDirectoryConfiguration;
+import de.ostfale.va.adapter.out.filesystem.ApplicationDirectoryConfiguration;
 import de.ostfale.va.application.port.in.DirectoryStructureUseCase;
 import de.ostfale.va.application.port.out.DirectoryConfiguration;
 import de.ostfale.va.common.FileSystemFacade;

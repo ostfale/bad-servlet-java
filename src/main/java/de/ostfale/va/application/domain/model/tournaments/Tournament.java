@@ -1,4 +1,4 @@
-package de.ostfale.va.application.domain.model;
+package de.ostfale.va.application.domain.model.tournaments;
 
 public record Tournament(
         String startDate,

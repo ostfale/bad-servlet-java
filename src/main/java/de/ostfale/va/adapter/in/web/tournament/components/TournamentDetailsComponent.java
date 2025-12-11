@@ -6,7 +6,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
-import de.ostfale.va.application.domain.model.Tournament;
+import de.ostfale.va.application.domain.model.tournaments.Tournament;
 import de.ostfale.va.common.UseLogging;
 
 public class TournamentDetailsComponent extends VerticalLayout implements UseLogging {

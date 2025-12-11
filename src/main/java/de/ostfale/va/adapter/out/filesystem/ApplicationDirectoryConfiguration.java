@@ -1,4 +1,4 @@
-package de.ostfale.va.adapter.out;
+package de.ostfale.va.adapter.out.filesystem;
 
 import de.ostfale.va.application.port.out.DirectoryConfiguration;
 import de.ostfale.va.common.FileSystemFacade;
@@ -8,7 +8,8 @@ import java.util.List;
 
 public class ApplicationDirectoryConfiguration implements DirectoryConfiguration, FileSystemFacade, UseLogging {
 
-    private static final String APP_NAME = ".bad-servlet";
+    public static final String APP_NAME = ".bad-servlet";
+    public static final String TOURNAMENT_DIR_NAME = "tournament";
 
     @Override
     public String basePath() {
@@ -29,7 +30,7 @@ public class ApplicationDirectoryConfiguration implements DirectoryConfiguration
                 createDirectoryEntry("favTournament", "data/favTournaments"),
                 createDirectoryEntry("favTournamentFavorites", "data/favTournaments/favorites"),
                 createDirectoryEntry("logs", "logs"),
-                createDirectoryEntry("tournament", "tournament"),
+                createDirectoryEntry(TOURNAMENT_DIR_NAME, "tournament"),
                 createDirectoryEntry("ranking", "ranking")
         );
     }

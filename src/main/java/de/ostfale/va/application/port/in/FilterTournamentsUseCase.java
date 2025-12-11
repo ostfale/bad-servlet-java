@@ -1,6 +1,7 @@
 package de.ostfale.va.application.port.in;
 
-import de.ostfale.va.application.domain.model.Tournament;
+import de.ostfale.va.application.domain.model.tournaments.Tournament;
+import de.ostfale.va.application.port.in.tournaments.TournamentsFilter;
 
 import java.util.stream.Stream;
 

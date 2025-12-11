@@ -1,15 +1,17 @@
 package de.ostfale.va.application.domain.service;
 
-import de.ostfale.va.application.domain.model.AgeClass;
-import de.ostfale.va.application.domain.model.TourCategory;
-import de.ostfale.va.application.domain.model.Tournament;
+import de.ostfale.va.application.domain.model.tournaments.AgeClass;
+import de.ostfale.va.application.domain.model.tournaments.TourCategory;
+import de.ostfale.va.application.domain.model.tournaments.Tournament;
 import de.ostfale.va.application.port.in.FilterTournamentsUseCase;
-import de.ostfale.va.application.port.in.TournamentsFilter;
+import de.ostfale.va.application.port.in.tournaments.TournamentsFilter;
+import de.ostfale.va.application.port.out.LoadTournamentsPort;
 import de.ostfale.va.common.TimeHandlerFacade;
 import de.ostfale.va.common.UseCase;
 import de.ostfale.va.common.UseLogging;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -17,10 +19,10 @@ import java.util.stream.Stream;
 @UseCase
 public class FilterTournamentsService implements FilterTournamentsUseCase, TimeHandlerFacade,UseLogging {
 
-    private final List<Tournament> tournaments;
+    private final Collection<Tournament> tournaments;
 
-    public FilterTournamentsService(List<Tournament> tournaments) {
-        this.tournaments = tournaments;
+    public FilterTournamentsService(LoadTournamentsPort tournaments) {
+        this.tournaments = tournaments.loadAll();
     }
 
     @Override
