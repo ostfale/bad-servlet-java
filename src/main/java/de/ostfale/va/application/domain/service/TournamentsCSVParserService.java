@@ -1,4 +1,4 @@
-package de.ostfale.va.adapter.out.filesystem;
+package de.ostfale.va.application.domain.service;
 
 import de.ostfale.va.application.domain.model.tournaments.TourCategory;
 import de.ostfale.va.application.domain.model.tournaments.Tournament;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class TournamentsCSVParser implements UseLogging {
+public class TournamentsCSVParserService implements UseLogging {
 
     private static final int DEFAULT_TOURNAMENT_ORDER = 0;
     private static final String HEADER_START_MARKER = "Start-Datum";

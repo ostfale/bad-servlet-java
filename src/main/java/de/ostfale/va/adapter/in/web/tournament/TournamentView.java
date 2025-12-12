@@ -12,7 +12,7 @@ import de.ostfale.va.adapter.in.web.tournament.components.TournamentFilterCompon
 import de.ostfale.va.adapter.in.web.tournament.components.TournamentListComponent;
 import de.ostfale.va.application.domain.model.tournaments.Tournament;
 import de.ostfale.va.application.port.in.FilterTournamentsUseCase;
-import de.ostfale.va.application.port.in.tournaments.TournamentsFilter;
+import de.ostfale.va.application.domain.service.tournament.TournamentsFilter;
 import de.ostfale.va.common.ServiceRegistry;
 import de.ostfale.va.common.UseLogging;
 

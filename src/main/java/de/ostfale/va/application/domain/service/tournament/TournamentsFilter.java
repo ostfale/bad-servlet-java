@@ -1,4 +1,4 @@
-package de.ostfale.va.application.port.in.tournaments;
+package de.ostfale.va.application.domain.service.tournament;
 
 import de.ostfale.va.application.domain.model.tournaments.AgeClass;
 import de.ostfale.va.application.domain.model.tournaments.TourCategory;

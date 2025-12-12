@@ -4,7 +4,7 @@ import de.ostfale.va.application.domain.model.tournaments.AgeClass;
 import de.ostfale.va.application.domain.model.tournaments.TourCategory;
 import de.ostfale.va.application.domain.model.tournaments.Tournament;
 import de.ostfale.va.application.port.in.FilterTournamentsUseCase;
-import de.ostfale.va.application.port.in.tournaments.TournamentsFilter;
+import de.ostfale.va.application.domain.service.tournament.TournamentsFilter;
 import de.ostfale.va.application.port.out.LoadTournamentsPort;
 import de.ostfale.va.common.TimeHandlerFacade;
 import de.ostfale.va.common.UseCase;
@@ -12,7 +12,6 @@ import de.ostfale.va.common.UseLogging;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 

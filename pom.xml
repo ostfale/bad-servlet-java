@@ -36,15 +36,6 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-        <repository>
-            <id>vaadin-prereleases</id>
-            <url>
-                https://maven.vaadin.com/vaadin-prereleases/
-            </url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
         <!-- Repository used by many Vaadin add-ons -->
         <repository>
             <id>Vaadin Directory</id>
@@ -66,15 +57,6 @@
             <url>https://repo.maven.apache.org/maven2</url>
             <snapshots>
                 <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-        <pluginRepository>
-            <id>vaadin-prereleases</id>
-            <url>
-                https://maven.vaadin.com/vaadin-prereleases/
-            </url>
-            <snapshots>
-                <enabled>true</enabled>
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
@@ -142,7 +124,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>${maven.compiler.release}</release>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

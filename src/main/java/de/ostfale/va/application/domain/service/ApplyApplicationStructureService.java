@@ -2,8 +2,8 @@ package de.ostfale.va.application.domain.service;
 
 import com.github.javaparser.utils.Log;
 import de.ostfale.va.adapter.out.filesystem.ApplicationDirectoryConfiguration;
-import de.ostfale.va.application.port.in.DirectoryStructureUseCase;
-import de.ostfale.va.application.port.out.DirectoryConfiguration;
+import de.ostfale.va.application.port.in.CreateDirectoryStructureUseCase;
+import de.ostfale.va.application.port.out.DirectoryConfigurationPort;
 import de.ostfale.va.common.FileSystemFacade;
 import de.ostfale.va.common.UseCase;
 import de.ostfale.va.common.UseLogging;
@@ -16,9 +16,9 @@ import java.util.List;
 
 
 @UseCase
-public class ApplyApplicationStructureService implements DirectoryStructureUseCase, FileSystemFacade, UseLogging {
+public class ApplyApplicationStructureService implements CreateDirectoryStructureUseCase, FileSystemFacade, UseLogging {
 
-    private final DirectoryConfiguration dirConfig = new ApplicationDirectoryConfiguration();
+    private final DirectoryConfigurationPort dirConfig = new ApplicationDirectoryConfiguration();
 
     @Override
     public List<String> validateAndCreateDirectoryStructure() {
@@ -51,13 +51,13 @@ public class ApplyApplicationStructureService implements DirectoryStructureUseCa
     }
 
     private void processDirectoryStructure(Path baseDirectory, List<String> errors) {
-        for (DirectoryConfiguration.DirectoryEntry entry : dirConfig.structure()) {
+        for (DirectoryConfigurationPort.DirectoryEntry entry : dirConfig.structure()) {
             Path fullPath = baseDirectory.resolve(entry.path());
             processDirectoryEntry(entry, fullPath, errors);
         }
     }
 
-    private void processDirectoryEntry(DirectoryConfiguration.DirectoryEntry entry, Path fullPath, List<String> errors) {
+    private void processDirectoryEntry(DirectoryConfigurationPort.DirectoryEntry entry, Path fullPath, List<String> errors) {
         if (!Files.exists(fullPath)) {
             handleMissingDirectory(entry, fullPath, errors);
         } else {
@@ -65,7 +65,7 @@ public class ApplyApplicationStructureService implements DirectoryStructureUseCa
         }
     }
 
-    private void handleMissingDirectory(DirectoryConfiguration.DirectoryEntry entry, Path fullPath, List<String> errors) {
+    private void handleMissingDirectory(DirectoryConfigurationPort.DirectoryEntry entry, Path fullPath, List<String> errors) {
         if (entry.createIfMissing()) {
             createDirectory(entry, fullPath, errors);
         } else if (entry.required()) {
@@ -84,7 +84,7 @@ public class ApplyApplicationStructureService implements DirectoryStructureUseCa
         }
     }
 
-    private void createDirectory(DirectoryConfiguration.DirectoryEntry entry, Path fullPath, List<String> errors) {
+    private void createDirectory(DirectoryConfigurationPort.DirectoryEntry entry, Path fullPath, List<String> errors) {
         try {
             Files.createDirectories(fullPath);
             log().info("Created directory: {}", fullPath);

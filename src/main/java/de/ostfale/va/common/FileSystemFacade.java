@@ -28,4 +28,11 @@ public interface FileSystemFacade {
         return Stream.ofNullable(new File(dirPath).listFiles()).flatMap(Stream::of).filter(File::isFile).collect(Collectors.toList());
     }
 
+    default boolean deleteAllFiles(String dirPath) {
+        var filesToDelete = readAllFiles(dirPath);
+        if (filesToDelete.isEmpty()) {
+            return true;
+        }
+        return filesToDelete.stream().allMatch(File::delete);
+    }
 }

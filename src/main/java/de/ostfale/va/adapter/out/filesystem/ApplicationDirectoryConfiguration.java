@@ -1,12 +1,12 @@
 package de.ostfale.va.adapter.out.filesystem;
 
-import de.ostfale.va.application.port.out.DirectoryConfiguration;
+import de.ostfale.va.application.port.out.DirectoryConfigurationPort;
 import de.ostfale.va.common.FileSystemFacade;
 import de.ostfale.va.common.UseLogging;
 
 import java.util.List;
 
-public class ApplicationDirectoryConfiguration implements DirectoryConfiguration, FileSystemFacade, UseLogging {
+public class ApplicationDirectoryConfiguration implements DirectoryConfigurationPort, FileSystemFacade, UseLogging {
 
     public static final String APP_NAME = ".bad-servlet";
     public static final String TOURNAMENT_DIR_NAME = "tournament";
