@@ -1,5 +1,6 @@
 package de.ostfale.va.adapter.out.filesystem;
 
+import de.ostfale.va.application.domain.service.FilterTournamentsService;
 import de.ostfale.va.application.port.out.DownloadFilePort;
 import de.ostfale.va.common.FileSystemFacade;
 import de.ostfale.va.common.UseCase;
@@ -60,6 +61,7 @@ public class HttpFileDownloadAdapter implements DownloadFilePort, FileSystemFaca
             }
 
             log().info("HttpFileDownloadAdapter :: Successfully downloaded to: {}", destination);
+            FilterTournamentsService.tournamentDataUpdated = true;
 
         } catch (IOException e) {
             throw new DownloadException("I/O error during download from " + url, e);

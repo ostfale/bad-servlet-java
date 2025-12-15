@@ -1,6 +1,5 @@
 package de.ostfale.va.application.domain.service;
 
-import com.github.javaparser.utils.Log;
 import de.ostfale.va.adapter.out.filesystem.ApplicationDirectoryConfiguration;
 import de.ostfale.va.application.port.in.CreateDirectoryStructureUseCase;
 import de.ostfale.va.application.port.out.DirectoryConfigurationPort;
@@ -70,7 +69,7 @@ public class ApplyApplicationStructureService implements CreateDirectoryStructur
             createDirectory(entry, fullPath, errors);
         } else if (entry.required()) {
             String error = "Required directory does not exist and creation is disabled: " + fullPath;
-            Log.error(error);
+            log().error(error);
             errors.add(error);
         }
     }
@@ -79,7 +78,7 @@ public class ApplyApplicationStructureService implements CreateDirectoryStructur
         log().trace("Validating existing directory: {}", fullPath);
         if (!Files.isDirectory(fullPath)) {
             String error = "Path exists but is not a directory: " + fullPath;
-            Log.error(error);
+            log().error(error);
             errors.add(error);
         }
     }

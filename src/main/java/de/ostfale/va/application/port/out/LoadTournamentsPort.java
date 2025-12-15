@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface LoadTournamentsPort {
 
-    Collection<Tournament> loadAll();
+    List<Tournament> loadAll();
 }

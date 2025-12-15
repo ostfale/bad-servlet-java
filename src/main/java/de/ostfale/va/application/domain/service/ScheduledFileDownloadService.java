@@ -1,5 +1,7 @@
 package de.ostfale.va.application.domain.service;
 
+import de.ostfale.va.application.domain.events.EventBus;
+import de.ostfale.va.application.domain.events.FilesDownloadedEvent;
 import de.ostfale.va.application.port.in.ScheduledDownloadUseCase;
 import de.ostfale.va.application.port.out.DownloadFilePort;
 import de.ostfale.va.application.port.out.TournamentFileDownloadConfigPort;
@@ -118,6 +120,7 @@ public class ScheduledFileDownloadService implements ScheduledDownloadUseCase, U
 
         if (allSuccessful) {
             log().info("ScheduledFileDownloadService :: All downloads completed successfully");
+            EventBus.getInstance().publish(new FilesDownloadedEvent(LocalDateTime.now()));
         } else {
             log().warn("ScheduledFileDownloadService :: Some downloads failed or timed out; scheduling retry");
             scheduleRetry();

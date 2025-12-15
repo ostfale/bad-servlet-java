@@ -1,6 +1,5 @@
 package de.ostfale.va.common;
 
-import com.github.javaparser.utils.Log;
 import de.ostfale.va.adapter.out.filesystem.HttpFileDownloadAdapter;
 import de.ostfale.va.adapter.out.filesystem.TournamentFileDownloadConfigAdapter;
 import de.ostfale.va.application.domain.service.ApplyApplicationStructureService;
@@ -26,7 +25,7 @@ public class ApplicationContextListener implements ServletContextListener, UseLo
 
         if (!errors.isEmpty()) {
             log().error("Directory structure validation failed with {} errors:", errors.size());
-            errors.forEach(Log::error);
+            errors.forEach(log()::error);
 
             // Decide whether to continue or fail fast
             boolean hasCriticalErrors = errors.stream()
