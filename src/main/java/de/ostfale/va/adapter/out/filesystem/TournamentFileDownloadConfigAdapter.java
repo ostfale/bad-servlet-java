@@ -37,7 +37,7 @@ public class TournamentFileDownloadConfigAdapter implements TournamentFileDownlo
 
     @Override
     public LocalTime getScheduledTime() {
-        return LocalTime.of(18, 13);
+        return LocalTime.of(3, 33);
     }
 
     @Override

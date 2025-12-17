@@ -11,6 +11,7 @@ import de.ostfale.va.common.UseCase;
 import de.ostfale.va.common.UseLogging;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -56,8 +57,7 @@ public class FilterTournamentsService implements FilterTournamentsUseCase, TimeH
 
     private void reloadTournaments() {
         log().debug("DataSource :: Reloading tournaments");
-        tournaments.clear();
-        tournaments = tournamentsPort.loadAll();
+        tournaments = new ArrayList<>(tournamentsPort.loadAll());
         tournamentDataUpdated = false;
     }
 
