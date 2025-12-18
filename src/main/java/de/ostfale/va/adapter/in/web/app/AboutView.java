@@ -1,6 +1,5 @@
 package de.ostfale.va.adapter.in.web.app;
 
-
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Paragraph;
