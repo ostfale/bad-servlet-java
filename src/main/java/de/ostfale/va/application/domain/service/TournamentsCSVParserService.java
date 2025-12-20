@@ -1,8 +1,6 @@
 package de.ostfale.va.application.domain.service;
 
-import de.ostfale.va.application.domain.model.tournaments.TourCategory;
-import de.ostfale.va.application.domain.model.tournaments.Tournament;
-import de.ostfale.va.application.domain.model.tournaments.TournamentType;
+import de.ostfale.va.application.domain.model.tournaments.*;
 import de.ostfale.va.common.UseLogging;
 
 import java.io.File;
@@ -12,6 +10,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class TournamentsCSVParserService implements UseLogging {
+
+    private static final String EINZEL = "Einzel";
+    private static final String DOPPEL = "Doppel";
+    private static final String MIXED = "Mixed";
 
     private static final int DEFAULT_TOURNAMENT_ORDER = 0;
     private static final String HEADER_START_MARKER = "Start-Datum";
@@ -127,22 +129,25 @@ public class TournamentsCSVParserService implements UseLogging {
         var tourVisibleDate = readCSVValue(splitRow, TOUR_VISIBLE_DATE_INDEX);
         var tourInvitationCreationDate = readCSVValue(splitRow, INVITATION_CREATION_DATE_INDEX);
         var tourLinkCreationDate = readCSVValue(splitRow, TURNIER_LINK_CREATION_DATE_INDEX);
-        var akU9 = readCSVValue(splitRow, AK_U9_INDEX);
-        var akU11 = readCSVValue(splitRow, AK_U11_INDEX);
-        var akU13 = readCSVValue(splitRow, AK_U13_INDEX);
-        var akU15 = readCSVValue(splitRow, AK_U15_INDEX);
-        var akU17 = readCSVValue(splitRow, AK_U17_INDEX);
-        var akU19 = readCSVValue(splitRow, AK_U19_INDEX);
-        var akU22 = readCSVValue(splitRow, AK_U22_INDEX);
-        var akO19 = readCSVValue(splitRow, AK_O19_INDEX);
-        var akO35 = readCSVValue(splitRow, AK_O35_INDEX);
+        List<AgeClassDisciplines> ageClassDisciplines = new ArrayList<>();
+        ageClassDisciplines.add(buildAgeClassDisciplines(AgeClass.U9, readCSVValue(splitRow, AK_U9_INDEX)));
+        ageClassDisciplines.add(buildAgeClassDisciplines(AgeClass.U11, readCSVValue(splitRow, AK_U11_INDEX)));
+        ageClassDisciplines.add(buildAgeClassDisciplines(AgeClass.U13, readCSVValue(splitRow, AK_U13_INDEX)));
+        ageClassDisciplines.add(buildAgeClassDisciplines(AgeClass.U15, readCSVValue(splitRow, AK_U15_INDEX)));
+        ageClassDisciplines.add(buildAgeClassDisciplines(AgeClass.U17, readCSVValue(splitRow, AK_U17_INDEX)));
+        ageClassDisciplines.add(buildAgeClassDisciplines(AgeClass.U19, readCSVValue(splitRow, AK_U19_INDEX)));
+        ageClassDisciplines.add(buildAgeClassDisciplines(AgeClass.U22, readCSVValue(splitRow, AK_U22_INDEX)));
+        ageClassDisciplines.add(buildAgeClassDisciplines(AgeClass.O19, readCSVValue(splitRow, AK_O19_INDEX)));
+        ageClassDisciplines.add(buildAgeClassDisciplines(AgeClass.O35, readCSVValue(splitRow, AK_O35_INDEX)));
 
         return new Tournament(
                 startDate, endDate, tournamentName, tournamentType, tournamentOrderNo, countryCode, location, postalCode,
                 region, openName, organizer, category, closeDate, webLinkUrl, pdfLinkUrl, pdfAvailable, tourCreationDate,
-                tourVisibleDate, tourInvitationCreationDate, tourLinkCreationDate,
-                akU9, akU11, akU13, akU15, akU17, akU19, akU22, akO19, akO35
-        );
+                tourVisibleDate, tourInvitationCreationDate, tourLinkCreationDate,ageClassDisciplines);
+    }
+
+    private AgeClassDisciplines buildAgeClassDisciplines(AgeClass ageClass,String ageClassDisciplines) {
+        return new AgeClassDisciplines(ageClass, isSingle(ageClassDisciplines), isDouble(ageClassDisciplines), isMixed(ageClassDisciplines));
     }
 
     private boolean isHeaderOrEmptyLine(String line) {
@@ -151,5 +156,17 @@ public class TournamentsCSVParserService implements UseLogging {
 
     private String fixRow(String row) {
         return row.replace("\"", "");
+    }
+
+    private boolean isMixed(String ageClassDisciplines) {
+        return ageClassDisciplines.contains(MIXED);
+    }
+
+    private boolean isDouble(String ageClassDisciplines) {
+        return ageClassDisciplines.contains(DOPPEL);
+    }
+
+    private boolean isSingle(String ageClassDisciplines) {
+        return ageClassDisciplines.contains(EINZEL);
     }
 }

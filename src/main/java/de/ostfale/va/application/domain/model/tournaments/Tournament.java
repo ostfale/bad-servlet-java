@@ -1,5 +1,7 @@
 package de.ostfale.va.application.domain.model.tournaments;
 
+import java.util.List;
+
 public record Tournament(
         String startDate,
         String endDate,
@@ -21,34 +23,11 @@ public record Tournament(
         String tourVisibleDate,
         String invitationCreationDate,
         String tourLinkCreationDate,
-        String AK_U09,
-        String AK_U11,
-        String AK_U13,
-        String AK_U15,
-        String AK_U17,
-        String AK_U19,
-        String AK_U22,
-        String AK_O19,
-        String AK_O35
-     //   List<AgeClassDisciplines> ageClassDisciplines
+        List<AgeClassDisciplines> ageClassDisciplines
 ) {
 
     public boolean isForAgeClass(AgeClass ageClass) {
-        return switch (ageClass) {
-            case U9 -> hasValidAgeClassData(AK_U09());
-            case U11 -> hasValidAgeClassData(AK_U11());
-            case U13 -> hasValidAgeClassData(AK_U13());
-            case U15 -> hasValidAgeClassData(AK_U15());
-            case U17 -> hasValidAgeClassData(AK_U17());
-            case U19 -> hasValidAgeClassData(AK_U19());
-            case U22 -> hasValidAgeClassData(AK_U22());
-            case O19 -> hasValidAgeClassData(AK_O19());
-            case O35 -> hasValidAgeClassData(AK_O35());
-            default -> false;
-        };
-    }
-
-    private boolean hasValidAgeClassData(String ageClassData) {
-        return ageClassData != null && !ageClassData.isBlank();
+        return ageClassDisciplines.stream()
+                .anyMatch(disciplines -> disciplines.ageClass().equals(ageClass) && disciplines.anyDisciplineForThisAgeClass());
     }
 }

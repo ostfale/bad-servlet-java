@@ -135,6 +135,7 @@ public class TournamentFilterComponent extends VerticalLayout implements UseLogg
         nameFilter.clear();
         locationFilter.clear();
         ageClassFilter.clear();
+        tourCategoryFilter.clear();
         fireFilterChangeEvent();
     }
 
