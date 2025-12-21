@@ -11,18 +11,16 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import de.ostfale.va.common.UseLogging;
-import de.ostfale.va.adapter.in.web.tournament.TournamentView;
 import de.ostfale.va.adapter.in.web.dashboard.OverviewView;
+import de.ostfale.va.adapter.in.web.tournament.TournamentView;
+import de.ostfale.va.common.UseLogging;
 
 import java.time.LocalDate;
 
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Route(value = "home")
-@RouteAlias(value = "")
 public class MainView extends AppLayout implements UseLogging, HasDynamicTitle {
 
     private static final String APP_TITLE = "Bad-Stat (Java - Servlet)";

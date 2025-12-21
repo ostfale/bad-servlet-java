@@ -6,10 +6,10 @@ import de.ostfale.va.adapter.in.web.app.MainView;
 import de.ostfale.va.adapter.in.web.dashboard.components.DownloadInfoCard;
 import de.ostfale.va.common.UseLogging;
 
-@Route(value = OverviewView.PATH, layout = MainView.class)
+@Route(value = "", layout = MainView.class)
 public class OverviewView extends VerticalLayout implements UseLogging {
 
-    public static final String PATH = "overview";
+    public static final String PATH = "";
 
     public OverviewView() {
         log().info("OverviewView :: constructor");

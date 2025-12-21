@@ -11,7 +11,7 @@
     <packaging>war</packaging>
 
     <properties>
-        <jdk.version>24</jdk.version>
+        <jdk.version>25</jdk.version>
 
         <maven.compiler.release>${jdk.version}</maven.compiler.release>
         <maven.compiler.source>${jdk.version}</maven.compiler.source>
@@ -21,10 +21,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
-        <vaadin.version>24.9.5</vaadin.version>
+        <vaadin.version>25.0.0</vaadin.version>
         <drivers.downloader.phase>pre-integration-test</drivers.downloader.phase>
-        <jetty.version>12.0.15</jetty.version>
-        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
+        <jetty.version>12.1.5</jetty.version>
+        <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
     </properties>
 
     <repositories>
@@ -108,7 +108,10 @@
             <version>${jakarta.servlet-api.version}</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-dev</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-testbench-junit5</artifactId>
