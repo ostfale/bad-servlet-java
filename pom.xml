@@ -12,7 +12,14 @@
 
     <properties>
         <java.version>25</java.version>
+
+        <!-- Vaadin -->
         <vaadin.version>25.0.0</vaadin.version>
+        <vaadin-icons.version>3.0.2</vaadin-icons.version>
+
+        <!-- Jetty  -->
+        <jetty.version>12.1.5</jetty.version>
+        <jetty-ee10-maven-plugin.version>12.1.5</jetty-ee10-maven-plugin.version>
 
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -22,8 +29,9 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
-        <jetty.version>12.1.5</jetty.version>
         <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
+        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+        <logback-classic.version>1.5.20</logback-classic.version>
     </properties>
 
     <dependencyManagement>
@@ -48,7 +56,7 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>6.1.0</version>
+            <version>${jakarta.servlet-api.version}</version>
             <scope>provided</scope>
         </dependency>
         <!-- Optional: Development mode tooling -->
@@ -60,14 +68,18 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-icons</artifactId>
-            <version>3.0.2</version>
+            <version>${vaadin-icons.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <!-- Use the 2025 release compatible with Vaadin 25's SLF4J 2.0.x API -->
-            <version>2.0.17</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback-classic.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>8.0</version>
         </dependency>
     </dependencies>
 
@@ -78,7 +90,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>${maven-compiler-plugin.version}</version>
             </plugin>
             <!-- Vaadin Plugin handles frontend bundle creation -->
             <plugin>
@@ -98,7 +110,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty.ee10</groupId>
                 <artifactId>jetty-ee10-maven-plugin</artifactId>
-                <version>12.1.5</version>
+                <version>${jetty-ee10-maven-plugin.version}</version>
                 <configuration>
                     <webApp>
                         <contextPath>/</contextPath>
@@ -108,4 +120,33 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>production</id>
+            <properties>
+                <vaadin.productionMode>true</vaadin.productionMode>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.vaadin</groupId>
+                        <artifactId>vaadin-maven-plugin</artifactId>
+                        <version>${vaadin.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>build-frontend</goal>
+                                </goals>
+                                <phase>compile</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <forceProductionBuild>true</forceProductionBuild>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
