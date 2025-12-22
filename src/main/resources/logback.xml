@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Suppress Logback's own status messages -->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+
+    <!-- Console appender with standard pattern (for development) -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%thread] %cyan(%logger{36}) - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- JSON appender for Loki -->
+    <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <!-- Add custom fields for Loki labels -->
+            <customFields>{"app":"bad-servlet-java","environment":"dev"}</customFields>
+            <!-- Include caller data (class, method, line number) -->
+            <includeCallerData>true</includeCallerData>
+            <!-- Include stack traces -->
+            <includeStackTrace>true</includeStackTrace>
+        </encoder>
+    </appender>
+
+    <!-- Root logger set to WARN -->
+    <root level="WARN">
+        <!-- Use CONSOLE for human-readable logs during development -->
+        <appender-ref ref="CONSOLE" />
+        <!-- Uncomment JSON appender when sending to Loki -->
+        <!-- <appender-ref ref="JSON" /> -->
+    </root>
+
+    <!-- Suppress verbose Jetty startup logs -->
+    <logger name="org.eclipse.jetty" level="ERROR" />
+    <logger name="org.eclipse.jetty.maven" level="ERROR" />
+    <logger name="org.eclipse.jetty.server" level="ERROR" />
+    <logger name="org.eclipse.jetty.ee10" level="ERROR" />
+    <logger name="org.eclipse.jetty.ee10.webapp" level="ERROR" />
+    <logger name="org.eclipse.jetty.ee10.maven" level="ERROR" />
+    
+    <!-- Suppress Atmosphere logs -->
+    <logger name="org.atmosphere" level="ERROR" />
+    
+    <!-- Your application logs can be more verbose -->
+    <logger name="de.ostfale.va" level="INFO" />
+</configuration>
