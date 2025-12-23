@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 
-public interface TimeHandlerFacade  {
+public interface TimeHandlerFacade {
 
     String TOURNAMENT_DATE_FILE_FORMAT = "yyyy-MM-dd";
     String TOURNAMENT_DATE_DISPLAY_FORMAT = "dd.MM.yyyy";

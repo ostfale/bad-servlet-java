@@ -1,0 +1,62 @@
+.download-info-card {
+    padding: 0;
+    width: 600px;
+    height: 600px;
+    overflow: hidden; /* Ensures image corners stay within card radius */
+}
+
+.horizontallayout-row {
+    padding-top: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.download-title {
+    color: #ae1732;
+    font-weight: normal;
+    margin: 0;
+    padding-left: 1rem;
+    /* Removed padding-top */
+    font-size: var(--lumo-font-size-xl);
+    line-height: var(--lumo-line-height-m); /* Explicit line height */
+}
+
+.year-title {
+    color: #ae1732;
+    font-weight: normal;
+    margin: 0;
+    padding-left: 2rem;
+    /* Removed padding-top */
+    font-size: var(--lumo-font-size-xl);
+    line-height: var(--lumo-line-height-m); /* Explicit line height */
+}
+
+.download-date-label {
+    color: black;
+    font-weight: normal;
+    font-size: var(--lumo-font-size-xl);
+    line-height: var(--lumo-line-height-m); /* Match the title */
+    /* Removed padding-top */
+}
+
+.download-result-title {
+    color: #ae1732;
+    font-weight: normal;
+    margin: 0;
+    padding-left: 1rem;
+    padding-top: 1rem;
+}
+
+.download-result-label {
+    color: #363840;
+    font-size: 1.4rem;
+    font-weight: normal;
+    padding-right: 1rem;
+    padding-top: 1rem;
+}
+
+.download-result-title {
+    margin: 0;
+    color: var(--lumo-secondary-text-color);
+    font-weight: bold;
+}

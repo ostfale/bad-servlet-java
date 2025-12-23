@@ -1,3 +1,5 @@
+@import url('./download-info-card.css');
+
 /* Medium drop shadow */
 vaadin-text-field::part(input-field) {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
