@@ -39,6 +39,22 @@
     /* Removed padding-top */
 }
 
+.property-name {
+    color: #ae1732;
+    font-size: smaller;);
+    font-weight: normal;
+    margin: 0;
+    padding-left: 3rem;
+}
+
+.property-value {
+    color: #363840;
+    font-size: smaller;
+    font-weight: normal;
+    margin: 0;
+}
+
+
 .download-result-title {
     color: #ae1732;
     font-weight: normal;

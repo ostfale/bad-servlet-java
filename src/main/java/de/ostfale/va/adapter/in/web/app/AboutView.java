@@ -15,7 +15,7 @@ public class AboutView extends VerticalLayout {
         H1 title = new H1("About");
         H2 subtitle = new H2("Badminton App - Vaadin Servlet");
 
-        Paragraph version = new Paragraph("Version: 1.15");
+        Paragraph version = new Paragraph("Version: 1.16");
         Paragraph author = new Paragraph("Created by: Uwe Sauerbrei");
 
         setSpacing(true);

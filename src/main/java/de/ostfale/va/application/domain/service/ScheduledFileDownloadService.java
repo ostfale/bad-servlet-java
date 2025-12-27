@@ -1,9 +1,9 @@
 package de.ostfale.va.application.domain.service;
 
-import de.ostfale.va.application.domain.events.EventBus;
-import de.ostfale.va.application.domain.events.FilesDownloadedEvent;
+import de.ostfale.va.application.domain.service.tournament.CalculateTournamentsStatistikService;
 import de.ostfale.va.application.port.in.ScheduledDownloadUseCase;
 import de.ostfale.va.application.port.out.DownloadFilePort;
+import de.ostfale.va.application.port.out.LoadTournamentsPort;
 import de.ostfale.va.application.port.out.TournamentFileDownloadConfigPort;
 import de.ostfale.va.application.port.out.TournamentFileDownloadConfigPort.DownloadTask;
 import de.ostfale.va.common.UseCase;
@@ -25,13 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ScheduledFileDownloadService implements ScheduledDownloadUseCase, UseLogging {
 
     private static final Duration DOWNLOAD_TIMEOUT = Duration.ofSeconds(30);
-
-    /**
-     * Guard timeout for the whole batch run (independent of per-file DOWNLOAD_TIMEOUT).
-     * Prevents the scheduled job from being stuck forever if something ignores cancellation.
-     */
     private static final Duration BATCH_TIMEOUT = Duration.ofMinutes(2);
-
     private static final Duration RETRY_DELAY = Duration.ofHours(1);
 
     private final DownloadFilePort downloadFilePort;
@@ -39,10 +33,22 @@ public class ScheduledFileDownloadService implements ScheduledDownloadUseCase, U
     private final ScheduledExecutorService scheduler;
     private final AtomicBoolean running = new AtomicBoolean(false);
 
+
+    private final LoadTournamentsPort loadTournamentsPort;
+    private final CalculateTournamentsStatistikService calculateStatisticsService;
+    private final TournamentStatisticsSignalService statisticsSignalService;
+
     public ScheduledFileDownloadService(DownloadFilePort downloadFilePort,
-                                        TournamentFileDownloadConfigPort configurationPort) {
+                                        TournamentFileDownloadConfigPort configurationPort,
+                                        LoadTournamentsPort loadTournamentsPort,
+                                        CalculateTournamentsStatistikService calculateStatisticsService,
+                                        TournamentStatisticsSignalService statisticsSignalService) {
         this.downloadFilePort = downloadFilePort;
         this.configurationPort = configurationPort;
+        this.loadTournamentsPort = loadTournamentsPort;
+        this.calculateStatisticsService = calculateStatisticsService;
+        this.statisticsSignalService = statisticsSignalService;
+
         // Use virtual thread executor for scheduling
         this.scheduler = Executors.newScheduledThreadPool(1, Thread.ofVirtual().factory());
     }
@@ -113,17 +119,34 @@ public class ScheduledFileDownloadService implements ScheduledDownloadUseCase, U
         try {
             allSuccessful = downloadAllIndependently(tasks);
         } catch (Exception e) {
-            // This should be rare now (mostly interruptions / unexpected scope errors)
             log().error("ScheduledFileDownloadService :: Batch execution failed: {}", e.getMessage(), e);
             allSuccessful = false;
         }
 
         if (allSuccessful) {
             log().info("ScheduledFileDownloadService :: All downloads completed successfully");
-            EventBus.getInstance().publish(new FilesDownloadedEvent(LocalDateTime.now()));
+            updateStatistics();
         } else {
             log().warn("ScheduledFileDownloadService :: Some downloads failed or timed out; scheduling retry");
             scheduleRetry();
+        }
+    }
+
+    private void updateStatistics() {
+        try {
+            LocalDateTime downloadTime = LocalDateTime.now();
+            String formattedDate = downloadTime.format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
+
+            // Load tournaments and calculate statistics
+            var tournaments = loadTournamentsPort.loadAll();
+            var statistics = calculateStatisticsService.loadTournamentsStatistik(tournaments, formattedDate);
+
+            // Update the signal
+            statisticsSignalService.updateStatistics(statistics);
+
+            log().info("ScheduledFileDownloadService :: Statistics updated successfully");
+        } catch (Exception e) {
+            log().error("ScheduledFileDownloadService :: Failed to update statistics: {}", e.getMessage(), e);
         }
     }
 

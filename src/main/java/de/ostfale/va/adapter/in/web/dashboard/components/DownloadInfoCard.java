@@ -1,56 +1,46 @@
 package de.ostfale.va.adapter.in.web.dashboard.components;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
+import com.vaadin.flow.component.ComponentEffect;
 import com.vaadin.flow.component.card.Card;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import de.ostfale.va.application.domain.events.EventBus;
-import de.ostfale.va.application.domain.events.FilesDownloadedEvent;
-import de.ostfale.va.application.domain.service.LastDownloadService;
+import de.ostfale.va.application.domain.service.TournamentStatisticsSignalService;
 import de.ostfale.va.common.TimeHandlerFacade;
 import de.ostfale.va.common.UseLogging;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.function.Consumer;
-
 public class DownloadInfoCard extends Div implements UseLogging, TimeHandlerFacade {
 
-    private final LastDownloadService downloadService;
     private final Span dateLabel;
-    private Consumer<FilesDownloadedEvent> eventListener;
+    private final Span currentYearValueLabel;
+    private final Span nextYearValueLabel;
 
-    public DownloadInfoCard() {
+    public DownloadInfoCard(TournamentStatisticsSignalService statisticsSignalService) {
         log().info("DownloadInfoCard :: constructor");
 
         this.dateLabel = createDateLabel();
-        this.downloadService = new LastDownloadService();
+        this.currentYearValueLabel = new Span("- / -");
+        this.nextYearValueLabel = new Span("-");
+
+        currentYearValueLabel.addClassName("property-value");
+        nextYearValueLabel.addClassName("property-value");
+
         initLayout();
-        updateDateLabel();
-    }
 
-    @Override
-    protected void onAttach(AttachEvent attachEvent) {
-        super.onAttach(attachEvent);
-        // Subscribe to download events
-        eventListener = event -> {
-            attachEvent.getUI().access(this::updateDateLabel);
-        };
-        EventBus.getInstance().subscribe(eventListener);
-        log().info("DownloadInfoCard :: Subscribed to download events");
-    }
+        // Register effect in constructor - Vaadin 25 handles lifecycle automatically
+        var signal = statisticsSignalService.getStatisticsSignal();
+        ComponentEffect.effect(this, () -> {
+            var stats = signal.value();
+            dateLabel.setText(stats.lastDownloadDate());
+            currentYearValueLabel.setText(stats.openTournamentsThisYear() + " / " + stats.totalTournamentsThisYear());
+            nextYearValueLabel.setText(String.valueOf(stats.totalTournamentsNextYear()));
+        });
 
-    @Override
-    protected void onDetach(DetachEvent detachEvent) {
-        super.onDetach(detachEvent);
-        // Unsubscribe when component is removed
-        if (eventListener != null) {
-            EventBus.getInstance().unsubscribe(eventListener);
-            log().info("DownloadInfoCard :: Unsubscribed from download events");
-        }
+        log().info("DownloadInfoCard :: Signal effect registered");
     }
 
     private void initLayout() {
@@ -63,11 +53,6 @@ public class DownloadInfoCard extends Div implements UseLogging, TimeHandlerFaca
         H2 sectionTitle = new H2("Statistik " + thisYear + "/" + ++thisYear);
         sectionTitle.getStyle().set("margin", "0");
 
-
-        //
-
-
-
         // Layout to push title to left and year to right
         HorizontalLayout yearHeader = new HorizontalLayout(sectionTitle);
         yearHeader.setWidthFull();
@@ -76,7 +61,7 @@ public class DownloadInfoCard extends Div implements UseLogging, TimeHandlerFaca
         yearHeader.getStyle().set("padding", "0 1rem");
 
         VerticalLayout resultLayout = new VerticalLayout();
-        resultLayout.add(yearHeader, prepareDownloadRow(),prepareCurrentYearRow(), prepareNextYearRow());
+        resultLayout.add(yearHeader, prepareDownloadRow(), prepareCurrentYearRow(), prepareNextYearRow());
         tournamentImageCard.add(image, resultLayout);
 
         layout.add(tournamentImageCard);
@@ -99,15 +84,29 @@ public class DownloadInfoCard extends Div implements UseLogging, TimeHandlerFaca
     }
 
     private HorizontalLayout prepareCurrentYearRow() {
-        H4 title = new H4("Turniere " + getActualCalendarYear());
-        title.addClassName("year-title");
-        return new HorizontalLayout(title);
+        HorizontalLayout row = new HorizontalLayout();
+        row.setWidthFull();
+        row.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
+        row.getStyle().set("padding-right", "1rem");
+
+        Span nameLabel = new Span("Turniere " + getActualCalendarYear());
+        nameLabel.addClassName("property-name");
+
+        row.add(nameLabel, currentYearValueLabel);
+        return row;
     }
 
     private HorizontalLayout prepareNextYearRow() {
-        H4 title = new H4("Turniere " + (getActualCalendarYear() +1));
-        title.addClassName("year-title");
-        return new HorizontalLayout(title);
+        HorizontalLayout row = new HorizontalLayout();
+        row.setWidthFull();
+        row.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
+        row.getStyle().set("padding-right", "1rem");
+
+        Span nameLabel = new Span("Turniere " + getNextCalendarYear());
+        nameLabel.addClassName("property-name");
+
+        row.add(nameLabel, nextYearValueLabel);
+        return row;
     }
 
     private Div createLayout() {
@@ -136,14 +135,5 @@ public class DownloadInfoCard extends Div implements UseLogging, TimeHandlerFaca
         var tournamentImage = new Image("images/tournaments_card.png", "Tournaments");
         tournamentImage.setWidth("100%");
         return tournamentImage;
-    }
-
-    private void updateDateLabel() {
-        downloadService.getLastDownloadDate()
-                .map(date -> date.format(DateTimeFormatter.ofPattern(TOURNAMENT_DATE_DISPLAY_FORMAT)))
-                .ifPresentOrElse(
-                        dateLabel::setText,
-                        () -> dateLabel.setText("Keine Downloads vorhanden")
-                );
     }
 }

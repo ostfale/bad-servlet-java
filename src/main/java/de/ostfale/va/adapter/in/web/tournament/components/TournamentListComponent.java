@@ -13,7 +13,7 @@ import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import de.ostfale.va.application.domain.model.tournaments.Tournament;
-import de.ostfale.va.application.domain.service.tournament.TournamentsFilter;
+import de.ostfale.va.application.domain.model.tournaments.TournamentsFilter;
 import de.ostfale.va.common.UseLogging;
 
 public class TournamentListComponent extends VerticalLayout implements UseLogging {
@@ -58,7 +58,7 @@ public class TournamentListComponent extends VerticalLayout implements UseLoggin
         addTextColumn(Tournament::tourCategory, "Kategorie", 0);
         addTextColumn(Tournament::organizer, "Organisation", 0);
 
-        addLinkColumn(Tournament::webLinkUrl, VaadinIcon.LINK, "DBV Turnier");
+        addLinkColumn(Tournament::webLinkUrl, VaadinIcon.LINK, "DBV Link");
         addLinkColumn(Tournament::pdfLinkUrl, VaadinIcon.FILE_TEXT_O, "Ausschreibung");
     }
 

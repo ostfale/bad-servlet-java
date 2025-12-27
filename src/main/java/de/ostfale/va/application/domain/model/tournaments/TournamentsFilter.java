@@ -1,7 +1,5 @@
-package de.ostfale.va.application.domain.service.tournament;
+package de.ostfale.va.application.domain.model.tournaments;
 
-import de.ostfale.va.application.domain.model.tournaments.AgeClass;
-import de.ostfale.va.application.domain.model.tournaments.TourCategory;
 import de.ostfale.va.common.UseLogging;
 
 import java.util.Collections;

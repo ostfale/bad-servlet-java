@@ -2,6 +2,7 @@ package de.ostfale.va.common;
 
 import de.ostfale.va.adapter.out.filesystem.LoadTournamentsFileAdapter;
 import de.ostfale.va.application.domain.service.FilterTournamentsService;
+import de.ostfale.va.application.domain.service.TournamentStatisticsSignalService;
 import de.ostfale.va.application.port.in.FilterTournamentsUseCase;
 import de.ostfale.va.application.port.out.LoadTournamentsPort;
 
@@ -32,5 +33,9 @@ public class ServiceRegistry  implements UseLogging{
     // Expose only the INTERFACES (Ports), never the concrete classes
     public FilterTournamentsUseCase getFilterTournamentsUseCase() {
         return filterTournamentsUseCase;
+    }
+
+    public TournamentStatisticsSignalService getTournamentStatisticsSignalService() {
+        return TournamentStatisticsSignalService.getInstance();
     }
 }

@@ -1,5 +1,8 @@
 package de.ostfale.va.application.domain.model.tournaments;
 
+import de.ostfale.va.common.TimeHandlerFacade;
+
+import java.time.LocalDate;
 import java.util.List;
 
 public record Tournament(
@@ -24,7 +27,24 @@ public record Tournament(
         String invitationCreationDate,
         String tourLinkCreationDate,
         List<AgeClassDisciplines> ageClassDisciplines
-) {
+) implements TimeHandlerFacade {
+
+    public boolean isFromCurrentYear() {
+        LocalDate startDate = parseDateToTournamentFormat(this.startDate);
+        int thisYear = getActualCalendarYear();
+        return startDate.getYear() == thisYear;
+    }
+
+    public boolean isFromNextYear() {
+        LocalDate startDate = parseDateToTournamentFormat(this.startDate);
+        int thisYear = getActualCalendarYear();
+        return startDate.getYear() == thisYear + 1;
+    }
+
+    public boolean isOpenTournament() {
+        LocalDate startDate = parseDateToTournamentFormat(this.startDate);
+        return isFromCurrentYear() &&startDate.isAfter(LocalDate.now());
+    }
 
     public boolean isForAgeClass(AgeClass ageClass) {
         return ageClassDisciplines.stream()

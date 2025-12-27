@@ -1,9 +1,12 @@
 package de.ostfale.va.common;
 
 import de.ostfale.va.adapter.out.filesystem.HttpFileDownloadAdapter;
+import de.ostfale.va.adapter.out.filesystem.LoadTournamentsFileAdapter;
 import de.ostfale.va.adapter.out.filesystem.TournamentFileDownloadConfigAdapter;
 import de.ostfale.va.application.domain.service.ApplyApplicationStructureService;
 import de.ostfale.va.application.domain.service.ScheduledFileDownloadService;
+import de.ostfale.va.application.domain.service.TournamentStatisticsSignalService;
+import de.ostfale.va.application.domain.service.tournament.CalculateTournamentsStatistikService;
 import de.ostfale.va.application.port.in.CreateDirectoryStructureUseCase;
 import de.ostfale.va.application.port.in.ScheduledDownloadUseCase;
 import jakarta.servlet.ServletContextEvent;
@@ -39,9 +42,15 @@ public class ApplicationContextListener implements ServletContextListener, UseLo
         }
 
         // Initialize scheduled downloads
-        scheduledDownloadUseCase = new ScheduledFileDownloadService(new HttpFileDownloadAdapter(), new TournamentFileDownloadConfigAdapter());
+        scheduledDownloadUseCase = new ScheduledFileDownloadService(
+                new HttpFileDownloadAdapter(),
+                new TournamentFileDownloadConfigAdapter(),
+                new LoadTournamentsFileAdapter(),
+                new CalculateTournamentsStatistikService(),
+                TournamentStatisticsSignalService.getInstance()  // Use singleton
+        );
         scheduledDownloadUseCase.startScheduledDownloads();
-        log().info("ApplicationContextListener :: Scheduled downloads initialization skipped (not configured)");
+        log().info("ApplicationContextListener :: Scheduled downloads started");
     }
 
     @Override

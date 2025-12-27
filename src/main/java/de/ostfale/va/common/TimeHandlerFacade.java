@@ -18,6 +18,10 @@ public interface TimeHandlerFacade {
         return LocalDate.now().get(WeekFields.of(Locale.getDefault()).weekBasedYear());
     }
 
+    default int getNextCalendarYear() {
+        return LocalDate.now().plusYears(1).get(WeekFields.of(Locale.getDefault()).weekBasedYear());
+    }
+
     default int getCalendarYearFromLastWeek() {
         return LocalDate.now().minusWeeks(1).get(WeekFields.of(Locale.getDefault()).weekBasedYear());
     }

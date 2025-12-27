@@ -2,13 +2,14 @@ package de.ostfale.va.application.domain.model.tournaments;
 
 import de.ostfale.va.common.UseLogging;
 
-public record TournamentStatistik(
-        int totalTournamentsThisYear,
-        int totalTournamentsNextYear,
-        int openTournamentsThisYear
+public record TournamentStatistics(
+        String lastDownloadDate,
+        long totalTournamentsThisYear,
+        long totalTournamentsNextYear,
+        long openTournamentsThisYear
 ) implements UseLogging {
 
-    public int totalTournaments() {
+    public long totalTournaments() {
         var totalTournaments = totalTournamentsThisYear + totalTournamentsNextYear;
         log().debug("TournamentStatistik :: Total tournaments: {}", totalTournaments);
         return totalTournaments;
