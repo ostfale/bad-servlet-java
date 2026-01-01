@@ -15,11 +15,11 @@ public interface TimeHandlerFacade {
     }
 
     default int getActualCalendarYear() {
-        return LocalDate.now().get(WeekFields.of(Locale.getDefault()).weekBasedYear());
+        return LocalDate.now().getYear();
     }
 
     default int getNextCalendarYear() {
-        return LocalDate.now().plusYears(1).get(WeekFields.of(Locale.getDefault()).weekBasedYear());
+        return LocalDate.now().plusYears(1).getYear();
     }
 
     default int getCalendarYearFromLastWeek() {

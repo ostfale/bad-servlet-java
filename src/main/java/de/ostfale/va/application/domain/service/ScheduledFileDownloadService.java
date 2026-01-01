@@ -113,7 +113,7 @@ public class ScheduledFileDownloadService implements ScheduledDownloadUseCase, U
             return;
         }
 
-        log().info("ScheduledFileDownloadService :: Starting download of {} files", tasks.size());
+        log().debug("ScheduledFileDownloadService :: Starting download of {} files", tasks.size());
 
         boolean allSuccessful;
         try {
